@@ -58,36 +58,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<AppUser> findAll() {
+    public List<UserDTO> findAllDTO() {
         if (userRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no users");
-        return userRepository.findAll();
-    }
-
-    @Override
-    public List<UserDTO> findAllDTO() {
-        List<AppUser> users = findAll();
+        List<AppUser> users = userRepository.findAll();
         List<UserDTO> userDTOS = users.stream()
                 .map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
         return userDTOS;
     }
 
     @Override
-    public AppUser updateById(Long userId, UserDTO changedUserDTO) {
+    public UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO) {
         AppUser user = findById(userId);
         AppUser changedUser = toUser(changedUserDTO);
         user.setUsername(changedUser.getUsername());
         user.setPassword(changedUser.getPassword());
         user.setName(changedUser.getName());
         user.setEmail(changedUser.getEmail());
-        return userRepository.save(user);
-    }
-
-    @Override
-    public UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO) {
-        AppUser user = updateById(userId, changedUserDTO);
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        return userDTO;
+        AppUser userFromRepository = userRepository.save(user);
+        UserDTO userDTOFromRepository = modelMapper.map(userFromRepository, UserDTO.class);
+        return userDTOFromRepository;
     }
 
     @Override
