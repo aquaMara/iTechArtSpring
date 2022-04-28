@@ -56,15 +56,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAll() {
+    public List<ArticleDTO> findAllDTO() {
         if (articleRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no articles");
-        return articleRepository.findAll();
-    }
-
-    @Override
-    public List<ArticleDTO> findAllDTO() {
-        List<Article> articles = findAll();
+        List<Article> articles = articleRepository.findAll();
         List<ArticleDTO> articleDTOS = articles.stream()
                 .map(article -> modelMapper.map(article, ArticleDTO.class)).collect(Collectors.toList());
         return articleDTOS;
@@ -73,20 +68,6 @@ public class ArticleServiceImpl implements ArticleService {
     // links, literature are not necessary
     // проверка на пользователя
     // получается много репозиториев внутри
-    @Override
-    public Article create(ArticleDTO articleDTO, MultipartFile file) throws IOException {
-        Article article = toArticle(articleDTO);
-        String filepath = imageUploader.uploadImage(file, uploadDirectory);
-        article.setFilePath(filepath);
-        return articleRepository.save(article);
-    }
-
-    @Override
-    public Article create(ArticleDTO articleDTO) {
-        Article article = toArticle(articleDTO);
-        return articleRepository.save(article);
-    }
-
     @Override
     public ArticleDTO createDTO(ArticleDTO articleDTO) {
         Article article = toArticle(articleDTO);
@@ -100,22 +81,6 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = findById(articleId);
         String filepath = imageUploader.uploadImage(file, uploadDirectory);
         article.setFilePath(filepath);
-        return articleRepository.save(article);
-    }
-
-    @Override
-    public Article updateById(Long articleId, ArticleDTO newArticleDTO, MultipartFile file) throws IOException {
-        Article article = findById(articleId);
-        Article newArticle = toArticle(newArticleDTO);
-        String filepath = imageUploader.uploadImage(file, uploadDirectory);
-        newArticle.setFilePath(filepath);
-        return articleRepository.save(newArticle);
-    }
-
-    @Override
-    public Article updateById(Long articleId, ArticleDTO newArticleDTO) {
-        Article article = findById(articleId);
-        Article newArticle = toArticle(newArticleDTO);
         return articleRepository.save(article);
     }
 

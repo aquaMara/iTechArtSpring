@@ -46,26 +46,13 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<Section> findAll() {
+    public List<SectionDTO> findAllDTO() {
         if (sectionRepository.findAll().isEmpty())
             throw new EntityNotFoundException("There are no sections");
-        return sectionRepository.findAll();
-    }
-
-    @Override
-    public List<SectionDTO> findAllDTO() {
-        List<Section> sections = findAll();
+        List<Section> sections = sectionRepository.findAll();
         List<SectionDTO> sectionDTOS = sections.stream()
                 .map(section -> modelMapper.map(section, SectionDTO.class)).collect(Collectors.toList());
         return sectionDTOS;
-    }
-
-    @Override
-    public Section create(SectionDTO sectionDTO) {
-        Section section = toSection(sectionDTO);
-        return sectionRepository.save(section);
-        // Subject subject = subjectService.findById(sectionDTO.getSubjectId());
-        //        section.setSubject(subject);
     }
 
     @Override
@@ -74,18 +61,6 @@ public class SectionServiceImpl implements SectionService {
         Section sectionFromRepository = sectionRepository.save(section);
         SectionDTO sectionDTOFromRepository = modelMapper.map(sectionFromRepository, SectionDTO.class);
         return sectionDTOFromRepository;
-    }
-
-    @Override
-    public Section updateById(Long sectionId, SectionDTO newSectionDTO) {
-        Section section = findById(sectionId);
-        Section newSection = toSection(newSectionDTO);
-        return sectionRepository.save(newSection);
-        //Section section = findById(sectionId);
-        //section.setSectionName(newSection.getSectionName());
-        // Subject subject = subjectService.findById(newSectionDTO.getSubjectId());
-        // section.setSubject(subject);
-        // return sectionRepository.save(section);
     }
 
     @Override

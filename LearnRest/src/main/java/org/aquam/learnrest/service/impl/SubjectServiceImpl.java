@@ -66,39 +66,16 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> findAll() {
+    public List<SubjectDTO> findAllDTO() {
         if (subjectRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no subjects");
-        return subjectRepository.findAll();
-    }
-
-    @Override
-    public List<SubjectDTO> findAllDTO() {
-        List<Subject> subjects = findAll();
+        List<Subject> subjects = subjectRepository.findAll();
         List<SubjectDTO> subjectDTOS = subjects.stream()
                 .map(subject -> modelMapper.map(subject, SubjectDTO.class)).collect(Collectors.toList());
         return subjectDTOS;
     }
 
     // на фронт недейств пока файл не выбран
-    @Override
-    public Subject create(SubjectDTO subjectDTO, MultipartFile file) throws IOException {
-        if (subjectRepository.findBySubjectName(subjectDTO.getSubjectName()).isPresent())
-            throw new EntityExistsException("Subject with name: " + subjectDTO.getSubjectName() + " already exists");
-        Subject subject = toSubject(subjectDTO);
-        String filepath = imageUploader.uploadImage(file, uploadDirectory);
-        subject.setFilePath(filepath);
-        return subjectRepository.save(subject);
-    }
-
-    @Override
-    public Subject create(SubjectDTO subjectDTO) {
-        if (subjectRepository.findBySubjectName(subjectDTO.getSubjectName()).isPresent())
-            throw new EntityExistsException("Subject with name: " + subjectDTO.getSubjectName() + " already exists");
-        Subject subject = toSubject(subjectDTO);
-        return subjectRepository.save(subject);
-    }
-
     @Override
     public SubjectDTO createDTO(SubjectDTO subjectDTO) {
         if (subjectRepository.findBySubjectName(subjectDTO.getSubjectName()).isPresent())
@@ -119,22 +96,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     // сущ ли subj с таким id - проверка для упд
     // право только на у а создал
-    @Override   // без path variable и так не раб
-    public Subject updateById(Long subjectId, SubjectDTO newSubjectDTO, MultipartFile file) throws IOException {
-        Subject subject = findById(subjectId);
-        Subject newSubject = toSubject(newSubjectDTO);
-        String filepath = imageUploader.uploadImage(file, uploadDirectory);
-        newSubject.setFilePath(filepath);
-        return subjectRepository.save(newSubject);
-    }
-
-    @Override
-    public Subject updateById(Long subjectId, SubjectDTO newSubjectDTO) {
-        Subject subject = findById(subjectId);
-        Subject newSubject = toSubject(newSubjectDTO);
-        return subjectRepository.save(newSubject);
-    }
-
+    // без path variable и так не раб
     @Override
     public SubjectDTO updateByIdDTO(Long subjectId, SubjectDTO newSubjectDTO) {
         Subject subject = findById(subjectId);
