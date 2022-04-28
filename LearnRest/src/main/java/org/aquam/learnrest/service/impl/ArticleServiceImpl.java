@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -48,10 +49,25 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleDTO findByIdDTO(Long articleId) {
+        Article article = findById(articleId);
+        ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
+        return articleDTO;
+    }
+
+    @Override
     public List<Article> findAll() {
         if (articleRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no articles");
         return articleRepository.findAll();
+    }
+
+    @Override
+    public List<ArticleDTO> findAllDTO() {
+        List<Article> articles = findAll();
+        List<ArticleDTO> articleDTOS = articles.stream()
+                .map(article -> modelMapper.map(article, ArticleDTO.class)).collect(Collectors.toList());
+        return articleDTOS;
     }
 
     // links, literature are not necessary
@@ -69,6 +85,14 @@ public class ArticleServiceImpl implements ArticleService {
     public Article create(ArticleDTO articleDTO) {
         Article article = toArticle(articleDTO);
         return articleRepository.save(article);
+    }
+
+    @Override
+    public ArticleDTO createDTO(ArticleDTO articleDTO) {
+        Article article = toArticle(articleDTO);
+        Article articleFromRepository = articleRepository.save(article);
+        ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
+        return articleDTOFromRepository;
     }
 
     @Override
@@ -93,6 +117,15 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = findById(articleId);
         Article newArticle = toArticle(newArticleDTO);
         return articleRepository.save(article);
+    }
+
+    @Override
+    public ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO) {
+        Article article = findById(articleId);
+        Article newArticle = toArticle(newArticleDTO);
+        Article articleFromRepository = articleRepository.save(article);
+        ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
+        return articleDTOFromRepository;
     }
 
     @Override

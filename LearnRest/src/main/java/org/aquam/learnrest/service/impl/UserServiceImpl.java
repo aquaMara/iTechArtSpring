@@ -21,6 +21,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.*;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -50,10 +51,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public UserDTO findByIdDTO(Long userId) {
+        AppUser user = findById(userId);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        return userDTO;
+    }
+
+    @Override
     public List<AppUser> findAll() {
         if (userRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no users");
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<UserDTO> findAllDTO() {
+        List<AppUser> users = findAll();
+        List<UserDTO> userDTOS = users.stream()
+                .map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
+        return userDTOS;
     }
 
     @Override
@@ -65,6 +81,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setName(changedUser.getName());
         user.setEmail(changedUser.getEmail());
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO) {
+        AppUser user = updateById(userId, changedUserDTO);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        return userDTO;
     }
 
     @Override
