@@ -1,0 +1,104 @@
+class SubjectServiceImplTest {
+
+    // !!! тк они в классе
+    @Mock   // тк он точно хорошо работает
+    private SubjectRepository subjectRepository;
+    private ModelMapper modelMapper;
+    private AutoCloseable autoCloseable;
+    private SubjectServiceImpl underTest;
+    private MockMultipartFile mockFile;
+
+    @BeforeEach
+    void setUp() {  // ctrl + alt + v to extract
+        autoCloseable = MockitoAnnotations.openMocks(this);
+        underTest = new SubjectServiceImpl(subjectRepository, modelMapper);
+        mockFile = new MockMultipartFile("user-file","test_subject.jpg", MediaType.IMAGE_JPEG_VALUE, "test data".getBytes());
+    }
+
+    // close resource after each test
+    @AfterEach
+    void tearDown() throws Exception {
+        autoCloseable.close();
+    }
+
+    @Test
+    void canFindAll() {
+        // given
+        // when
+        underTest.findAll();
+        // then
+        // verify that this repo was invoked to find all
+        // because subjectRepository has methods that work for sure
+        // and we mock its impl inside our test
+        // unit test is fast (no operations with db)
+        verify(subjectRepository).findAll();
+    }
+
+    @Test
+    @Disabled
+    void canCreate() throws IOException {
+        // given
+        Subject subject = new Subject("test_subject", "test_subject.jpg");
+        // SubjectDTO subjectDTO = new SubjectDTO("test_subject");
+
+        // when
+        underTest.create(subject, mockFile);
+        // then
+        Mockito.doReturn(new Subject())
+                .when(underTest)
+                .create(subject, mockFile);
+
+        // ArgumentCaptor<Subject> subjectArgumentCaptor = ArgumentCaptor.forClass(Subject.class);
+
+        // verify(subjectRepository).save(subjectArgumentCaptor.capture());
+        // Subject capturedSubject = subjectArgumentCaptor.getValue();
+        // assertThat(capturedSubject).isEqualTo(subject);
+    }
+
+    @Test
+    @Disabled
+    void willThrowWhenSubjectNameISTaken() throws IOException {
+        // given
+        Subject subject = new Subject("k", "test_subject.jpg");
+        // SubjectDTO subjectDTO = new SubjectDTO("test_subject");
+        // boolean present = subjectRepository.findBySubjectName(subject.getSubjectName()).isPresent();
+        // given(present).willReturn(true);
+
+        Mockito.doReturn(EntityExistsException.class)
+                        .when(subjectRepository)
+                                .findBySubjectName(subject.getSubjectName())
+                                        .isPresent();
+        // when
+        // then
+        /*
+        Assertions.assertThatThrownBy(() -> underTest.create(subject, mockFile))
+                .isInstanceOf(EntityExistsException.class)
+                .hasMessageContaining(String.format("Subject with name: %s not found", subject.getSubjectName()));
+         */
+    }
+
+    @Test
+    @Disabled
+    void updateById() {
+    }
+
+    @Test
+    @Disabled
+    void deleteById() {
+    }
+
+    @Test
+    @Disabled
+    void uploadImage() {
+    }
+
+    @Test
+    @Disabled
+    void toSubject() {
+        SubjectDTO subjectDTO = new SubjectDTO();
+        given(subjectDTO.getSubjectName() == null).willReturn(true);
+        Assertions.assertThatThrownBy(() -> underTest.toSubject(subjectDTO))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessageContaining("Subject is null");
+    }
+}
