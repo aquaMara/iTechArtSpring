@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -45,9 +46,23 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public SubjectDTO findByIdDTO(Long subjectId) {
+        Subject subject = findById(subjectId);
+        SubjectDTO subjectDTO = modelMapper.map(subject, SubjectDTO.class);
+        return subjectDTO;
+    }
+
+    @Override
     public Subject findByName(String name) {
         return subjectRepository.findBySubjectName(name).orElseThrow(()
                 -> new EntityNotFoundException("Subject with name: " + name + " not found"));
+    }
+
+    @Override
+    public SubjectDTO findByNameDTO(String name) {
+        Subject subject = findByName(name);
+        SubjectDTO subjectDTO = modelMapper.map(subject, SubjectDTO.class);
+        return subjectDTO;
     }
 
     @Override
@@ -55,6 +70,14 @@ public class SubjectServiceImpl implements SubjectService {
         if (subjectRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no subjects");
         return subjectRepository.findAll();
+    }
+
+    @Override
+    public List<SubjectDTO> findAllDTO() {
+        List<Subject> subjects = findAll();
+        List<SubjectDTO> subjectDTOS = subjects.stream()
+                .map(subject -> modelMapper.map(subject, SubjectDTO.class)).collect(Collectors.toList());
+        return subjectDTOS;
     }
 
     // на фронт недейств пока файл не выбран
@@ -74,6 +97,16 @@ public class SubjectServiceImpl implements SubjectService {
             throw new EntityExistsException("Subject with name: " + subjectDTO.getSubjectName() + " already exists");
         Subject subject = toSubject(subjectDTO);
         return subjectRepository.save(subject);
+    }
+
+    @Override
+    public SubjectDTO createDTO(SubjectDTO subjectDTO) {
+        if (subjectRepository.findBySubjectName(subjectDTO.getSubjectName()).isPresent())
+            throw new EntityExistsException("Subject with name: " + subjectDTO.getSubjectName() + " already exists");
+        Subject subject = toSubject(subjectDTO);
+        Subject subjectFromRepository = subjectRepository.save(subject);
+        SubjectDTO subjectDTOFromRepository = modelMapper.map(subjectFromRepository, SubjectDTO.class);
+        return subjectDTOFromRepository;
     }
 
     @Override
@@ -100,6 +133,15 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = findById(subjectId);
         Subject newSubject = toSubject(newSubjectDTO);
         return subjectRepository.save(newSubject);
+    }
+
+    @Override
+    public SubjectDTO updateByIdDTO(Long subjectId, SubjectDTO newSubjectDTO) {
+        Subject subject = findById(subjectId);
+        Subject newSubject = toSubject(newSubjectDTO);
+        Subject subjectFromRepository = subjectRepository.save(newSubject);
+        SubjectDTO subjectDTOFromRepository = modelMapper.map(subjectFromRepository, SubjectDTO.class);
+        return subjectDTOFromRepository;
     }
 
     @Override
