@@ -18,30 +18,35 @@ public class SectionController {
 
     private final SectionServiceImpl sectionService;
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<Section>> getAllSections() {
-        return new ResponseEntity<>(sectionService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<SectionDTO>> getAllSections() {
+        return new ResponseEntity<>(sectionService.findAllDTO(), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{sectionId}")
-    public ResponseEntity<Section> getSectionById(@PathVariable Long sectionId) {
-        return new ResponseEntity<>(sectionService.findById(sectionId), HttpStatus.OK);
+    public ResponseEntity<SectionDTO> getSectionById(@PathVariable Long sectionId) {
+        return new ResponseEntity<>(sectionService.findByIdDTO(sectionId), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<Section> createSection(@RequestBody SectionDTO sectionDTO) {
-        return new ResponseEntity<>(sectionService.create(sectionDTO), HttpStatus.CREATED);
+    public ResponseEntity<SectionDTO> createSection(@RequestBody SectionDTO sectionDTO) {
+        return new ResponseEntity<>(sectionService.createDTO(sectionDTO), HttpStatus.CREATED);
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sectionId}")
-    public ResponseEntity<Section> updateSection(@PathVariable Long sectionId, @RequestBody SectionDTO newSectionDTO) {
-        return new ResponseEntity<>(sectionService.updateById(sectionId, newSectionDTO), HttpStatus.OK);
+    public ResponseEntity<SectionDTO> updateSection(@PathVariable Long sectionId, @RequestBody SectionDTO newSectionDTO) {
+        return new ResponseEntity<>(sectionService.updateByIdDTO(sectionId, newSectionDTO), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{sectionId}")
     public ResponseEntity<Boolean> deleteSectionById(@PathVariable Long sectionId) {

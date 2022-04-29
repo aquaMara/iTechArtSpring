@@ -19,25 +19,29 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<AppUser>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         System.out.println("Hello");
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAllDTO(), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{userId}")
-    public ResponseEntity<AppUser> getUserAccount(@AuthenticationPrincipal @PathVariable("userId") Long userId) {
-        return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getUserAccount(@AuthenticationPrincipal @PathVariable("userId") Long userId) {
+        return new ResponseEntity<>(userService.findByIdDTO(userId), HttpStatus.OK);
     }
 
+    //
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
     @PutMapping("/{userId}")
-    public ResponseEntity<AppUser> updateUser(@PathVariable Long userId, @RequestBody UserDTO changedUserDTO) {
-        return new ResponseEntity<>(userService.updateById(userId, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO changedUserDTO) {
+        return new ResponseEntity<>(userService.updateByIdDTO(userId, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
     }
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Boolean> deleteUserById(@PathVariable Long userId) {
