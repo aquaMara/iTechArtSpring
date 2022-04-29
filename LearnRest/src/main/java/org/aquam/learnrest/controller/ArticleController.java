@@ -22,38 +22,36 @@ public class ArticleController {
 
     private final ArticleServiceImpl articleService;
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping
-    ResponseEntity<List<Article>> getAllArticles() {
-        return new ResponseEntity<>(articleService.findAll(), HttpStatus.OK);
+    ResponseEntity<List<ArticleDTO>> getAllArticles() {
+        return new ResponseEntity<>(articleService.findAllDTO(), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{articleId}")
-    ResponseEntity<Article> getArticleById(@PathVariable Long articleId) {
-        return new ResponseEntity<>(articleService.findById(articleId), HttpStatus.OK);
+    ResponseEntity<ArticleDTO> getArticleById(@PathVariable Long articleId) {
+        return new ResponseEntity<>(articleService.findByIdDTO(articleId), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("")
-    ResponseEntity<Article> createArticle(@AuthenticationPrincipal AppUser user, @RequestBody ArticleDTO articleDTO) {
+    ResponseEntity<ArticleDTO> createArticle(@AuthenticationPrincipal AppUser user, @RequestBody ArticleDTO articleDTO) {
         articleDTO.setUserId(user.getUserId());
-        return new ResponseEntity<>(articleService.create(articleDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(articleService.createDTO(articleDTO), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
-    @PostMapping("/upload/{articleId}")
-    ResponseEntity<Article> addFile(@PathVariable Long articleId, @RequestParam(value = "data") MultipartFile file) throws IOException {
-        // user was set higher
-        return new ResponseEntity<>(articleService.addFile(articleId, file), HttpStatus.OK);
-    }
-
+    // +
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/{articleId}")
-    ResponseEntity<Article> updateArticle(@PathVariable Long articleId, @RequestBody ArticleDTO articleDTO) throws IOException {
-        return new ResponseEntity<>(articleService.updateById(articleId, articleDTO), HttpStatus.OK);
+    ResponseEntity<ArticleDTO> updateArticleDTO(@PathVariable Long articleId, @RequestBody ArticleDTO articleDTO) throws IOException {
+        return new ResponseEntity<>(articleService.updateByIdDTO(articleId, articleDTO), HttpStatus.OK);
     }
 
+    // +
     @PreAuthorize("hasRole('TEACHER')")
     @DeleteMapping("/{articleId}")
     ResponseEntity<Boolean> deleteArticleById(@PathVariable Long articleId) {

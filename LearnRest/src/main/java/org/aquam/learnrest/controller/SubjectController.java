@@ -21,36 +21,42 @@ public class SubjectController {
 
     private final SubjectServiceImpl subjectService;
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<Subject>> getAllSubjects() {
-        return new ResponseEntity<>(subjectService.findAll(), HttpStatus.OK);   // 200
+    public ResponseEntity<List<SubjectDTO>> getAllSubjects() {
+        return new ResponseEntity<>(subjectService.findAllDTO(), HttpStatus.OK);   // 200
     }
 
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{subjectId}")
-    public ResponseEntity<Subject> getSubjectById(@PathVariable Long subjectId) {
-        return new ResponseEntity<>(subjectService.findById(subjectId), HttpStatus.OK); // 200
+    public ResponseEntity<SubjectDTO> getSubjectById(@PathVariable Long subjectId) {
+        return new ResponseEntity<>(subjectService.findByIdDTO(subjectId), HttpStatus.OK); // 200
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectDTO newSubjectDTO) throws IOException {
-        return new ResponseEntity<>(subjectService.create(newSubjectDTO), HttpStatus.CREATED);  // 201
+    public ResponseEntity<SubjectDTO> createSubject(@RequestBody SubjectDTO newSubjectDTO) throws IOException {
+        return new ResponseEntity<>(subjectService.createDTO(newSubjectDTO), HttpStatus.CREATED);  // 201
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload/{subjectId}")
     public ResponseEntity<Subject> addFile(@PathVariable Long subjectId, @RequestParam(value = "data") MultipartFile file) throws IOException {
         return new ResponseEntity<>(subjectService.addFile(subjectId, file), HttpStatus.OK);  // 200
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{subjectId}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable Long subjectId, @RequestBody SubjectDTO newSubjectDTO) {
-        return new ResponseEntity<>(subjectService.updateById(subjectId, newSubjectDTO), HttpStatus.OK); // 200 for updates, 201 for created
+    public ResponseEntity<SubjectDTO> updateSubject(@PathVariable Long subjectId, @RequestBody SubjectDTO newSubjectDTO) {
+        return new ResponseEntity<>(subjectService.updateByIdDTO(subjectId, newSubjectDTO), HttpStatus.OK); // 200 for updates, 201 for created
     }
 
+    // +
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{subjectId}")  // HttpStatus.ACCEPTED = 202
     public ResponseEntity<Boolean> deleteSubjectById(@PathVariable Long subjectId) {
