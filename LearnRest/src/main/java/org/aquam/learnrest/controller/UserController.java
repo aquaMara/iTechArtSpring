@@ -30,11 +30,18 @@ public class UserController {
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserAccount(@AuthenticationPrincipal @PathVariable("userId") Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal @PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userService.findByIdDTO(userId), HttpStatus.OK);
     }
 
-    //
+    // +
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
+    @GetMapping("/username/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@AuthenticationPrincipal @PathVariable("username") String username) {
+        return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
+    }
+
+    // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO changedUserDTO) {

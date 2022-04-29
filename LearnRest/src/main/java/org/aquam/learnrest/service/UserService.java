@@ -9,6 +9,7 @@ public interface UserService {
 
     AppUser findById(Long id);
     UserDTO findByIdDTO(Long id);
+    UserDTO findByUsername(String username);
     List<UserDTO> findAllDTO();
     UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO);
     boolean deleteById(Long userId);
