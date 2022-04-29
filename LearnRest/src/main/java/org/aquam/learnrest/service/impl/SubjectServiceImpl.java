@@ -100,7 +100,10 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public SubjectDTO updateByIdDTO(Long subjectId, SubjectDTO newSubjectDTO) {
         Subject subject = findById(subjectId);
+        if (subjectRepository.findBySubjectName(newSubjectDTO.getSubjectName()).isPresent())
+            throw new EntityExistsException("Subject with name: " + newSubjectDTO.getSubjectName() + " already exists");
         Subject newSubject = toSubject(newSubjectDTO);
+        newSubject.setSubjectId(subjectId);
         Subject subjectFromRepository = subjectRepository.save(newSubject);
         SubjectDTO subjectDTOFromRepository = modelMapper.map(subjectFromRepository, SubjectDTO.class);
         return subjectDTOFromRepository;

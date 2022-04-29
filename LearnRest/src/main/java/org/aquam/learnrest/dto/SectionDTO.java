@@ -3,6 +3,7 @@ package org.aquam.learnrest.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -17,6 +18,7 @@ public class SectionDTO {
     private String sectionName;
 
     private Long subjectId;
+    List<ArticleDTO> articles;
 
     @Override
     public boolean equals(Object o) {

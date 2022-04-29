@@ -3,6 +3,7 @@ package org.aquam.learnrest.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -16,6 +17,7 @@ public class SubjectDTO {
     @NotBlank(message = "Can not be empty")
     private String subjectName;
     private String filePath;
+    List<SectionDTO> sections;
 
     @Override
     public boolean equals(Object o) {

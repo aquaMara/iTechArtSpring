@@ -5,6 +5,7 @@ import org.aquam.learnrest.model.UserRole;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -27,6 +28,8 @@ public class UserDTO {
     @NotBlank(message = "Can not be empty")
     @Email(message = "Valid only")
     private String email;
+
+    List<ArticleDTO> articles;
 
     @Override
     public boolean equals(Object o) {
