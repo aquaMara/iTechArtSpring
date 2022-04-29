@@ -45,6 +45,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public UserDTO findByUsername(String username) {
+        AppUser user = (AppUser) loadUserByUsername(username);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        return userDTO;
+    }
+
+    @Override
     public AppUser findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
                 -> new EntityNotFoundException("User with id: " + userId + " not found"));
