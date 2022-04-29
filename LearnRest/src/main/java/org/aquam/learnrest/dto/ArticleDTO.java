@@ -18,7 +18,6 @@ public class ArticleDTO {
     private String content;
     private String link;
     private String literature;
-    private String filePath;
 
     private Long sectionId;
     private Long userId;
@@ -28,11 +27,11 @@ public class ArticleDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArticleDTO that = (ArticleDTO) o;
-        return heading.equals(that.heading) && content.equals(that.content) && Objects.equals(link, that.link) && Objects.equals(literature, that.literature) && filePath.equals(that.filePath);
+        return heading.equals(that.heading) && content.equals(that.content) && Objects.equals(link, that.link) && Objects.equals(literature, that.literature);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(heading, content, link, literature, filePath);
+        return Objects.hash(heading, content, link, literature);
     }
 }

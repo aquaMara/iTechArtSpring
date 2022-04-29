@@ -67,6 +67,7 @@ public class SectionServiceImpl implements SectionService {
     public SectionDTO updateByIdDTO(Long sectionId, SectionDTO newSectionDTO) {
         Section section = findById(sectionId);
         Section newSection = toSection(newSectionDTO);
+        newSection.setSectionId(sectionId);
         Section sectionFromRepository = sectionRepository.save(newSection);
         SectionDTO sectionDTOFromRepository = modelMapper.map(sectionFromRepository, SectionDTO.class);
         return sectionDTOFromRepository;

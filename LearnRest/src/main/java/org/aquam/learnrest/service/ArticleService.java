@@ -13,7 +13,6 @@ public interface ArticleService {
     ArticleDTO findByIdDTO(Long articleIdDTO);
     List<ArticleDTO> findAllDTO();
     ArticleDTO createDTO(ArticleDTO articleDTO);
-    Article addFile(Long articleId, MultipartFile file) throws IOException;
     ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO);
     boolean deleteById(Long articleId);
 }

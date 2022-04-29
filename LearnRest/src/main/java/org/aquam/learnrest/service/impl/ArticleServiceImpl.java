@@ -32,8 +32,6 @@ public class ArticleServiceImpl implements ArticleService {
     private final ModelMapper modelMapper;
     private final UserServiceImpl userService;
     private final SectionServiceImpl sectionService;
-    private final ImageUploaderImpl imageUploader;
-    public final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/static/article_images";
 
     private static Validator validator;
     static {
@@ -74,14 +72,6 @@ public class ArticleServiceImpl implements ArticleService {
         Article articleFromRepository = articleRepository.save(article);
         ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
         return articleDTOFromRepository;
-    }
-
-    @Override
-    public Article addFile(Long articleId, MultipartFile file) throws IOException {
-        Article article = findById(articleId);
-        String filepath = imageUploader.uploadImage(file, uploadDirectory);
-        article.setFilePath(filepath);
-        return articleRepository.save(article);
     }
 
     @Override
