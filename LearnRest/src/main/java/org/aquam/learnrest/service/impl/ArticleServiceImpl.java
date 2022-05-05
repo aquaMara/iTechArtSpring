@@ -78,6 +78,25 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO) {
         Article article = findById(articleId);
         Article newArticle = toArticle(newArticleDTO);
+        newArticle.setArticleId(articleId);
+        Article articleFromRepository = articleRepository.save(newArticle);
+        ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
+        return articleDTOFromRepository;
+    }
+
+    @Override
+    public ArticleDTO updateById(Long articleId, ArticleDTO newArticleDTO) {
+        Article article = findById(articleId);
+
+        newArticleDTO.setUserId(article.getUser().getUserId());
+        newArticleDTO.setSectionId(article.getSection().getSectionId());
+
+        Article newArticle = toArticle(newArticleDTO);
+        article.setContent(newArticle.getContent());
+        article.setHeading(newArticle.getHeading());
+        article.setLink(newArticle.getLink());
+        article.setLiterature(newArticle.getLiterature());
+
         Article articleFromRepository = articleRepository.save(article);
         ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
         return articleDTOFromRepository;

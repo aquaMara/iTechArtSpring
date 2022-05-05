@@ -1,14 +1,13 @@
 package org.aquam.learnrest.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.aquam.learnrest.dto.UserDTO;
 import org.aquam.learnrest.exception.EntitiesNotFoundException;
+import org.aquam.learnrest.exception.UsernameExistsException;
 import org.aquam.learnrest.model.AppUser;
 import org.aquam.learnrest.repository.UserRepository;
 import org.aquam.learnrest.service.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -88,8 +88,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public UserDTO updateByUsername(String username, UserDTO changedUserDTO) {
+        AppUser user = (AppUser) loadUserByUsername(username);
+        // AppUser changedUser = toUser(changedUserDTO);
+        user.setName(changedUserDTO.getName());
+        user.setEmail(changedUserDTO.getEmail());
+        AppUser userFromRepository = userRepository.save(user);
+        UserDTO userDTOFromRepository = modelMapper.map(userFromRepository, UserDTO.class);
+        return userDTOFromRepository;
+    }
+
+    @Override
     public AppUser registerUser(UserDTO userDTO) {
-        // AppUser user = (AppUser) loadUserByUsername(userDTO.getUsername());
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent())
             throw new EntityExistsException("User with username: " + userDTO.getUsername() + " already exists");
         AppUser user = toUser(userDTO);

@@ -21,6 +21,7 @@ public class ArticleDTO {
 
     private Long sectionId;
     private Long userId;
+    // private String username;
 
     @Override
     public boolean equals(Object o) {

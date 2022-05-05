@@ -14,5 +14,6 @@ public interface ArticleService {
     List<ArticleDTO> findAllDTO();
     ArticleDTO createDTO(ArticleDTO articleDTO);
     ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO);
+    ArticleDTO updateById(Long articleId, ArticleDTO newArticleDTO);
     boolean deleteById(Long articleId);
 }
