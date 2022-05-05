@@ -41,6 +41,7 @@ public class ArticleController {
     @PostMapping("")
     ResponseEntity<ArticleDTO> createArticle(@AuthenticationPrincipal AppUser user, @RequestBody ArticleDTO articleDTO) {
         articleDTO.setUserId(user.getUserId());
+        // articleDTO.setUsername(user.getUsername());
         return new ResponseEntity<>(articleService.createDTO(articleDTO), HttpStatus.CREATED);
     }
 
@@ -48,7 +49,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/{articleId}")
     ResponseEntity<ArticleDTO> updateArticleDTO(@PathVariable Long articleId, @RequestBody ArticleDTO articleDTO) throws IOException {
-        return new ResponseEntity<>(articleService.updateByIdDTO(articleId, articleDTO), HttpStatus.OK);
+        return new ResponseEntity<>(articleService.updateById(articleId, articleDTO), HttpStatus.OK);
     }
 
     // +

@@ -30,7 +30,7 @@ public class UserController {
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal @PathVariable("userId") Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userService.findByIdDTO(userId), HttpStatus.OK);
     }
 
@@ -46,6 +46,12 @@ public class UserController {
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO changedUserDTO) {
         return new ResponseEntity<>(userService.updateByIdDTO(userId, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
+    }
+
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
+    @PutMapping("/username/{username}")
+    public ResponseEntity<UserDTO> updateUserByUsername(@PathVariable String username, @RequestBody UserDTO changedUserDTO) {
+        return new ResponseEntity<>(userService.updateByUsername(username, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
     }
 
     // +
