@@ -12,6 +12,7 @@ public interface UserService {
     UserDTO findByUsername(String username);
     List<UserDTO> findAllDTO();
     UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO);
+    UserDTO updateByUsername(String username, UserDTO changedUserDTO);
     boolean deleteById(Long userId);
     AppUser registerUser(UserDTO userDTO);
 

@@ -31,7 +31,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final ModelMapper modelMapper;
     private final ImageUploaderImpl imageUploader;
-    public static String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/static/subject_images";
+    public static String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/static";
 
     private static Validator validator;
     static {
