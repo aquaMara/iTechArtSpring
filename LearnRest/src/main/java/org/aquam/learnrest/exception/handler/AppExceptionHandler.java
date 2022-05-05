@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import org.aquam.learnrest.exception.AppResponse;
 import org.aquam.learnrest.exception.EmptyInputException;
 import org.aquam.learnrest.exception.EntitiesNotFoundException;
+import org.aquam.learnrest.exception.UsernameExistsException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -51,8 +52,15 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);    // 404
     }
 
+
     @ExceptionHandler(EntityExistsException.class)
-    public ResponseEntity<AppResponse> handleEntityExistsException(PersistenceException exception) {
+    public ResponseEntity<AppResponse> handleEntityExistsException(EntityExistsException exception) {
+        AppResponse response = new AppResponse(exception.getMessage(), ZonedDateTime.now(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameExistsException.class)
+    public ResponseEntity<AppResponse> handleUsernameExistsException(UsernameExistsException exception) {
         AppResponse response = new AppResponse(exception.getMessage(), ZonedDateTime.now(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
