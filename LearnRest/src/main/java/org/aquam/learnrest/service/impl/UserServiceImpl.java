@@ -3,7 +3,6 @@ package org.aquam.learnrest.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.aquam.learnrest.dto.UserDTO;
 import org.aquam.learnrest.exception.EntitiesNotFoundException;
-import org.aquam.learnrest.exception.UsernameExistsException;
 import org.aquam.learnrest.model.AppUser;
 import org.aquam.learnrest.repository.UserRepository;
 import org.aquam.learnrest.service.UserService;
@@ -19,7 +18,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,20 +50,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public AppUser findById(Long userId) {
+    public AppUser findByIdBase(Long userId) {
         return userRepository.findById(userId).orElseThrow(()
                 -> new EntityNotFoundException("User with id: " + userId + " not found"));
     }
 
     @Override
-    public UserDTO findByIdDTO(Long userId) {
-        AppUser user = findById(userId);
+    public UserDTO findById(Long userId) {
+        AppUser user = findByIdBase(userId);
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;
     }
 
     @Override
-    public List<UserDTO> findAllDTO() {
+    public List<UserDTO> findAll() {
         if (userRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no users");
         List<AppUser> users = userRepository.findAll();
@@ -75,8 +73,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO) {
-        AppUser user = findById(userId);
+    public UserDTO updateById(Long userId, UserDTO changedUserDTO) {
+        AppUser user = findByIdBase(userId);
         AppUser changedUser = toUser(changedUserDTO);
         user.setUsername(changedUser.getUsername());
         user.setPassword(changedUser.getPassword());
@@ -110,7 +108,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public boolean deleteById(Long userId) {
-        AppUser user = findById(userId);
+        AppUser user = findByIdBase(userId);
         userRepository.delete(user);
         return true;
     }

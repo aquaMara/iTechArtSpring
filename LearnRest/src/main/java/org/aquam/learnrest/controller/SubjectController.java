@@ -5,7 +5,6 @@ import org.aquam.learnrest.dto.SubjectDTO;
 import org.aquam.learnrest.model.Subject;
 import org.aquam.learnrest.service.impl.SubjectServiceImpl;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +24,21 @@ public class SubjectController {
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<SubjectDTO>> getAllSubjects() {
-        return new ResponseEntity<>(subjectService.findAllDTO(), HttpStatus.OK);   // 200
+        return new ResponseEntity<>(subjectService.findAll(), HttpStatus.OK);   // 200
     }
 
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{subjectId}")
     public ResponseEntity<SubjectDTO> getSubjectById(@PathVariable Long subjectId) {
-        return new ResponseEntity<>(subjectService.findByIdDTO(subjectId), HttpStatus.OK); // 200
+        return new ResponseEntity<>(subjectService.findById(subjectId), HttpStatus.OK); // 200
     }
 
     // +
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<SubjectDTO> createSubject(@RequestBody SubjectDTO newSubjectDTO) throws IOException {
-        return new ResponseEntity<>(subjectService.createDTO(newSubjectDTO), HttpStatus.CREATED);  // 201
+        return new ResponseEntity<>(subjectService.create(newSubjectDTO), HttpStatus.CREATED);  // 201
     }
 
     // +
@@ -53,7 +52,7 @@ public class SubjectController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{subjectId}")
     public ResponseEntity<SubjectDTO> updateSubject(@PathVariable Long subjectId, @RequestBody SubjectDTO newSubjectDTO) {
-        return new ResponseEntity<>(subjectService.updateByIdDTO(subjectId, newSubjectDTO), HttpStatus.OK); // 200 for updates, 201 for created
+        return new ResponseEntity<>(subjectService.updateById(subjectId, newSubjectDTO), HttpStatus.OK); // 200 for updates, 201 for created
     }
 
     // +

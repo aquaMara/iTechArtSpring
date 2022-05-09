@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface ArticleService {
 
-    Article findById(Long articleId);
-    ArticleDTO findByIdDTO(Long articleIdDTO);
-    List<ArticleDTO> findAllDTO();
-    ArticleDTO createDTO(ArticleDTO articleDTO);
-    ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO);
+    Article findByIdBase(Long articleId);
+    ArticleDTO findById(Long articleIdDTO);
+    List<ArticleDTO> findAll();
+    ArticleDTO create(ArticleDTO articleDTO);
     ArticleDTO updateById(Long articleId, ArticleDTO newArticleDTO);
     boolean deleteById(Long articleId);
 
