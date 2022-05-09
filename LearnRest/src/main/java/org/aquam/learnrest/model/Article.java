@@ -7,7 +7,6 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 public class Article {
 
@@ -21,7 +20,18 @@ public class Article {
     private String link;
     private String literature;
 
+    private Double sumOfScores;
+    private Integer timesClicked;
+    private Double rating;
+
+    public Article() {
+        this.sumOfScores = 0.0;
+        this.timesClicked = 0;
+        this.rating = 0.0;
+    }
+
     public Article(Long articleId, String heading, String content, String link, String literature) {
+        this();
         this.articleId = articleId;
         this.heading = heading;
         this.content = content;

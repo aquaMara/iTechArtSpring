@@ -19,6 +19,10 @@ public class ArticleDTO {
     private String link;
     private String literature;
 
+    private Double sumOfScores;
+    private Integer timesClicked;
+    private Double rating;
+
     private Long sectionId;
     private Long userId;
     // private String username;

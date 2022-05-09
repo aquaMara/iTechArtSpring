@@ -59,6 +59,12 @@ public class ArticleController {
         return new ResponseEntity<>(articleService.deleteById(articleId), HttpStatus.OK);
     }
 
+    @PreAuthorize(("hasRole('STUDENT')"))
+    @PutMapping("/rating/{articleId}")
+    ResponseEntity<ArticleDTO> setArticleRating(@PathVariable Long articleId, @RequestParam(value="score") Double score) {
+        return new ResponseEntity<>(articleService.setRating(articleId, score), HttpStatus.OK);
+    }
+
 }
 /*
 get, post = /api/articles
