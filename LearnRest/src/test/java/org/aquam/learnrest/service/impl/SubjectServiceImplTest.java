@@ -41,6 +41,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceImplTest {
 
+    /*
+
     @Mock
     private SubjectRepository subjectRepository;
     @Mock
@@ -205,4 +207,6 @@ class SubjectServiceImplTest {
         // Subject subject = new Subject(null, "subjectDTO_name", "filepath.jpg");
 
     }
+
+     */
 }

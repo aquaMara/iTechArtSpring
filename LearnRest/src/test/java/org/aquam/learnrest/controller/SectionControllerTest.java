@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = WebSecurityConfig.class)
 @AutoConfigureMockMvc
 class SectionControllerTest {
+    /*
 
     @Autowired
     private MockMvc mockMvc;
@@ -314,6 +315,8 @@ class SectionControllerTest {
         resultActions.andDo(print());
         resultActions.andExpect(status().isNotFound());
     }
+
+     */
 }
 
 /*

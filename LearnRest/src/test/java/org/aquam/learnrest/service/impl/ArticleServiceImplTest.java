@@ -38,6 +38,8 @@ import static org.mockito.Mockito.*;
 //@SpringBootTest
 class ArticleServiceImplTest {
 
+    /*
+
     @Mock
     private ArticleRepository articleRepository;
     @Mock
@@ -181,5 +183,7 @@ class ArticleServiceImplTest {
     @Test
     void toArticle() {
     }
+
+     */
 
 }

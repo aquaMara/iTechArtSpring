@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest {
 
+    /*
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -129,4 +130,6 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(true));
 
     }
+
+     */
 }

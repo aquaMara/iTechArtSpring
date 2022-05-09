@@ -52,6 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SubjectControllerTest {
 
+    /*
     @Autowired
     private MockMvc mockMvc;
 
@@ -326,6 +327,8 @@ class SubjectControllerTest {
         resultActions.andDo(print());
         resultActions.andExpect(status().isBadRequest());
     }
+
+     */
 
 }
 /*
