@@ -15,11 +15,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.*;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,33 +36,33 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public Subject findById(Long subjectId) {
+    public Subject findByIdBase(Long subjectId) {
         return subjectRepository.findById(subjectId).orElseThrow(()
                 -> new EntityNotFoundException("Subject with id: " + subjectId + " not found"));
     }
 
     @Override
-    public SubjectDTO findByIdDTO(Long subjectId) {
-        Subject subject = findById(subjectId);
+    public SubjectDTO findById(Long subjectId) {
+        Subject subject = findByIdBase(subjectId);
         SubjectDTO subjectDTO = modelMapper.map(subject, SubjectDTO.class);
         return subjectDTO;
     }
 
     @Override
-    public Subject findByName(String name) {
+    public Subject findByNameBase(String name) {
         return subjectRepository.findBySubjectName(name).orElseThrow(()
                 -> new EntityNotFoundException("Subject with name: " + name + " not found"));
     }
 
     @Override
-    public SubjectDTO findByNameDTO(String name) {
-        Subject subject = findByName(name);
+    public SubjectDTO findByName(String name) {
+        Subject subject = findByNameBase(name);
         SubjectDTO subjectDTO = modelMapper.map(subject, SubjectDTO.class);
         return subjectDTO;
     }
 
     @Override
-    public List<SubjectDTO> findAllDTO() {
+    public List<SubjectDTO> findAll() {
         if (subjectRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no subjects");
         List<Subject> subjects = subjectRepository.findAll();
@@ -77,7 +73,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     // на фронт недейств пока файл не выбран
     @Override
-    public SubjectDTO createDTO(SubjectDTO subjectDTO) {
+    public SubjectDTO create(SubjectDTO subjectDTO) {
         if (subjectRepository.findBySubjectName(subjectDTO.getSubjectName()).isPresent())
             throw new EntityExistsException("Subject with name: " + subjectDTO.getSubjectName() + " already exists");
         Subject subject = toSubject(subjectDTO);
@@ -88,7 +84,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject addFile(Long subjectId, MultipartFile file) throws IOException {
-        Subject subject = findById(subjectId);
+        Subject subject = findByIdBase(subjectId);
         String filepath = imageUploader.uploadImage(file, uploadDirectory);
         subject.setFilePath(filepath);
         return subjectRepository.save(subject);
@@ -98,8 +94,8 @@ public class SubjectServiceImpl implements SubjectService {
     // право только на у а создал
     // без path variable и так не раб
     @Override
-    public SubjectDTO updateByIdDTO(Long subjectId, SubjectDTO newSubjectDTO) {
-        Subject subject = findById(subjectId);
+    public SubjectDTO updateById(Long subjectId, SubjectDTO newSubjectDTO) {
+        Subject subject = findByIdBase(subjectId);
         if (subjectRepository.findBySubjectName(newSubjectDTO.getSubjectName()).isPresent())
             throw new EntityExistsException("Subject with name: " + newSubjectDTO.getSubjectName() + " already exists");
         Subject newSubject = toSubject(newSubjectDTO);
@@ -111,7 +107,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public boolean deleteById(Long subjectId) {
-        Subject subject = findById(subjectId);
+        Subject subject = findByIdBase(subjectId);
         subjectRepository.delete(subject);
         return true;
     }

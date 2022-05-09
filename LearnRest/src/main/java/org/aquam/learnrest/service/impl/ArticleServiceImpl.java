@@ -11,14 +11,9 @@ import org.aquam.learnrest.service.ArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,20 +36,20 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public Article findById(Long articleId) {
+    public Article findByIdBase(Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(()
                 -> new EntityNotFoundException("Article with id: " + articleId + " not found"));
     }
 
     @Override
-    public ArticleDTO findByIdDTO(Long articleId) {
-        Article article = findById(articleId);
+    public ArticleDTO findById(Long articleId) {
+        Article article = findByIdBase(articleId);
         ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
         return articleDTO;
     }
 
     @Override
-    public List<ArticleDTO> findAllDTO() {
+    public List<ArticleDTO> findAll() {
         if (articleRepository.findAll().isEmpty())
             throw new EntitiesNotFoundException("There are no articles");
         List<Article> articles = articleRepository.findAll();
@@ -67,7 +62,7 @@ public class ArticleServiceImpl implements ArticleService {
     // проверка на пользователя
     // получается много репозиториев внутри
     @Override
-    public ArticleDTO createDTO(ArticleDTO articleDTO) {
+    public ArticleDTO create(ArticleDTO articleDTO) {
         Article article = toArticle(articleDTO);
         Article articleFromRepository = articleRepository.save(article);
         ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
@@ -75,18 +70,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO) {
-        Article article = findById(articleId);
-        Article newArticle = toArticle(newArticleDTO);
-        newArticle.setArticleId(articleId);
-        Article articleFromRepository = articleRepository.save(newArticle);
-        ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
-        return articleDTOFromRepository;
-    }
-
-    @Override
     public ArticleDTO updateById(Long articleId, ArticleDTO newArticleDTO) {
-        Article article = findById(articleId);
+        Article article = findByIdBase(articleId);
 
         newArticleDTO.setUserId(article.getUser().getUserId());
         newArticleDTO.setSectionId(article.getSection().getSectionId());
@@ -104,14 +89,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean deleteById(Long articleId) {
-        Article article = findById(articleId);
+        Article article = findByIdBase(articleId);
         articleRepository.delete(article);
         return true;
     }
 
     @Override
     public ArticleDTO setRating(Long articleId, Double score) {
-        Article article = findById(articleId);
+        Article article = findByIdBase(articleId);
         Double newSumOfScores = article.getSumOfScores() + score;
         article.setSumOfScores(newSumOfScores);
         Integer newTimesClicked = article.getTimesClicked() + 1;
@@ -128,9 +113,9 @@ public class ArticleServiceImpl implements ArticleService {
         if (!validationExceptions.isEmpty())
             throw new ConstraintViolationException(validationExceptions);
         Article article = modelMapper.map(articleDTO, Article.class);
-        Section section = sectionService.findById(articleDTO.getSectionId());
+        Section section = sectionService.findByIdBase(articleDTO.getSectionId());
         article.setSection(section);
-        AppUser user = userService.findById(articleDTO.getUserId());
+        AppUser user = userService.findByIdBase(articleDTO.getUserId());
         article.setUser(user);
         return article;
         /*

@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface UserService {
 
-    AppUser findById(Long id);
-    UserDTO findByIdDTO(Long id);
+    AppUser findByIdBase(Long id);
+    UserDTO findById(Long id);
     UserDTO findByUsername(String username);
-    List<UserDTO> findAllDTO();
-    UserDTO updateByIdDTO(Long userId, UserDTO changedUserDTO);
+    List<UserDTO> findAll();
+    UserDTO updateById(Long userId, UserDTO changedUserDTO);
     UserDTO updateByUsername(String username, UserDTO changedUserDTO);
     boolean deleteById(Long userId);
     AppUser registerUser(UserDTO userDTO);

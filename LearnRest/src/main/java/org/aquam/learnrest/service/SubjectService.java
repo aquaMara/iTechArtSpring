@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface SubjectService {
 
-    Subject findById(Long subjectId);
-    SubjectDTO findByIdDTO(Long subjectId);
-    Subject findByName(String name);
-    SubjectDTO findByNameDTO(String name);
-    List<SubjectDTO> findAllDTO();
-    SubjectDTO createDTO(SubjectDTO subjectDTO);
+    Subject findByIdBase(Long subjectId);
+    SubjectDTO findById(Long subjectId);
+    Subject findByNameBase(String name);
+    SubjectDTO findByName(String name);
+    List<SubjectDTO> findAll();
+    SubjectDTO create(SubjectDTO subjectDTO);
     Subject addFile(Long subjectId, MultipartFile file) throws IOException;
-    SubjectDTO updateByIdDTO(Long subjectId, SubjectDTO newSubjectDTO);
+    SubjectDTO updateById(Long subjectId, SubjectDTO newSubjectDTO);
     boolean deleteById(Long subjectId);
 }

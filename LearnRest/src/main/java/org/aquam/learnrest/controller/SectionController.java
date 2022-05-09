@@ -2,7 +2,6 @@ package org.aquam.learnrest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.aquam.learnrest.dto.SectionDTO;
-import org.aquam.learnrest.model.Section;
 import org.aquam.learnrest.service.impl.SectionServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,28 +21,28 @@ public class SectionController {
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<SectionDTO>> getAllSections() {
-        return new ResponseEntity<>(sectionService.findAllDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(sectionService.findAll(), HttpStatus.OK);
     }
 
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{sectionId}")
     public ResponseEntity<SectionDTO> getSectionById(@PathVariable Long sectionId) {
-        return new ResponseEntity<>(sectionService.findByIdDTO(sectionId), HttpStatus.OK);
+        return new ResponseEntity<>(sectionService.findById(sectionId), HttpStatus.OK);
     }
 
     // +
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<SectionDTO> createSection(@RequestBody SectionDTO sectionDTO) {
-        return new ResponseEntity<>(sectionService.createDTO(sectionDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(sectionService.create(sectionDTO), HttpStatus.CREATED);
     }
 
     // +
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sectionId}")
     public ResponseEntity<SectionDTO> updateSection(@PathVariable Long sectionId, @RequestBody SectionDTO newSectionDTO) {
-        return new ResponseEntity<>(sectionService.updateByIdDTO(sectionId, newSectionDTO), HttpStatus.OK);
+        return new ResponseEntity<>(sectionService.updateById(sectionId, newSectionDTO), HttpStatus.OK);
     }
 
     // +

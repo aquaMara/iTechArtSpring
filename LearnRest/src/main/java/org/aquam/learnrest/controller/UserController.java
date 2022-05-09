@@ -2,14 +2,13 @@ package org.aquam.learnrest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.aquam.learnrest.dto.UserDTO;
-import org.aquam.learnrest.model.AppUser;
 import org.aquam.learnrest.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
+
 import java.util.List;
 
 @RestController
@@ -24,14 +23,14 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         System.out.println("Hello");
-        return new ResponseEntity<>(userService.findAllDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") Long userId) {
-        return new ResponseEntity<>(userService.findByIdDTO(userId), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findById(userId), HttpStatus.OK);
     }
 
     // +
@@ -45,7 +44,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO changedUserDTO) {
-        return new ResponseEntity<>(userService.updateByIdDTO(userId, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
+        return new ResponseEntity<>(userService.updateById(userId, changedUserDTO), HttpStatus.OK); // 200 for updates, 201 for created
     }
 
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")

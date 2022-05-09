@@ -3,14 +3,12 @@ package org.aquam.learnrest.controller;
 import lombok.RequiredArgsConstructor;
 import org.aquam.learnrest.dto.ArticleDTO;
 import org.aquam.learnrest.model.AppUser;
-import org.aquam.learnrest.model.Article;
 import org.aquam.learnrest.service.impl.ArticleServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,14 +24,14 @@ public class ArticleController {
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping
     ResponseEntity<List<ArticleDTO>> getAllArticles() {
-        return new ResponseEntity<>(articleService.findAllDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(articleService.findAll(), HttpStatus.OK);
     }
 
     // +
     @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/{articleId}")
     ResponseEntity<ArticleDTO> getArticleById(@PathVariable Long articleId) {
-        return new ResponseEntity<>(articleService.findByIdDTO(articleId), HttpStatus.OK);
+        return new ResponseEntity<>(articleService.findById(articleId), HttpStatus.OK);
     }
 
     // +
@@ -42,7 +40,7 @@ public class ArticleController {
     ResponseEntity<ArticleDTO> createArticle(@AuthenticationPrincipal AppUser user, @RequestBody ArticleDTO articleDTO) {
         articleDTO.setUserId(user.getUserId());
         // articleDTO.setUsername(user.getUsername());
-        return new ResponseEntity<>(articleService.createDTO(articleDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(articleService.create(articleDTO), HttpStatus.CREATED);
     }
 
     // +
