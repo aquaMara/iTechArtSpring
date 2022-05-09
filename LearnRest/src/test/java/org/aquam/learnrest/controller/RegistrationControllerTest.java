@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class RegistrationControllerTest {
 
+    /*
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -55,4 +56,7 @@ class RegistrationControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
     }
+
+     */
+
 }

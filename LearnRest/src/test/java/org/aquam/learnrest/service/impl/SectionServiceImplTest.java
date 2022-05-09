@@ -32,6 +32,7 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class SectionServiceImplTest {
 
+    /*
     @Mock
     private SectionRepository sectionRepository;
     @Mock
@@ -127,4 +128,6 @@ class SectionServiceImplTest {
     void toSection() {
 
     }
+
+     */
 }
