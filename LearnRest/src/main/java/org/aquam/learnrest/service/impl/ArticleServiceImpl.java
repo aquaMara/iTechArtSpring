@@ -109,6 +109,20 @@ public class ArticleServiceImpl implements ArticleService {
         return true;
     }
 
+    @Override
+    public ArticleDTO setRating(Long articleId, Double score) {
+        Article article = findById(articleId);
+        Double newSumOfScores = article.getSumOfScores() + score;
+        article.setSumOfScores(newSumOfScores);
+        Integer newTimesClicked = article.getTimesClicked() + 1;
+        article.setTimesClicked(newTimesClicked);
+        Double rating = newSumOfScores * 1.0 / newTimesClicked;
+        article.setRating(rating);
+        Article articleFromRepository = articleRepository.save(article);
+        ArticleDTO articleDTOFromRepository = modelMapper.map(articleFromRepository, ArticleDTO.class);
+        return articleDTOFromRepository;
+    }
+
     public Article toArticle(ArticleDTO articleDTO) {
         Set<ConstraintViolation<ArticleDTO>> validationExceptions = validator.validate(articleDTO);
         if (!validationExceptions.isEmpty())

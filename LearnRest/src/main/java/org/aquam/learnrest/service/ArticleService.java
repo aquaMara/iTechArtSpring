@@ -16,4 +16,6 @@ public interface ArticleService {
     ArticleDTO updateByIdDTO(Long articleId, ArticleDTO newArticleDTO);
     ArticleDTO updateById(Long articleId, ArticleDTO newArticleDTO);
     boolean deleteById(Long articleId);
+
+    ArticleDTO setRating(Long articleId, Double score);
 }
