@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    /*
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -50,10 +50,11 @@ class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
-    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NDkwODMzMzksImV4cCI6MTY0OTQ0MzMzOX0.DkfdKSypk2E9DI5m8eHiLfIKmiXC7SoGQ-OEkNd_uxo";
-    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Iiwicm9sZSI6IlJPTEVfVEVBQ0hFUiIsImlhdCI6MTY0OTA4MzM2MywiZXhwIjoxNjQ5NDQzMzYzfQ.-Z4C1w2KP8Mqdaj3mivaFKOORKmJPGEOysR4Ky7ywj4";
-    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxIiwicm9sZSI6IlJPTEVfU1RVREVOVCIsImlhdCI6MTY0OTA4MzQwOCwiZXhwIjoxNjQ5NDQzNDA4fQ.X3LDgHF5Z6g_S-MJTvWJ3AkL7djCVfEFAv_nfBp4cwI";
+    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjY2Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NTIxODI2MTksImV4cCI6MTY1MjE4NjIxOX0.QOmmKdFjg_HzWOWzIqGgsD-NO0n-uarEioPJm-WDQoU";
+    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbSIsInJvbGUiOiJST0xFX1RFQUNIRVIiLCJpYXQiOjE2NTIxODIzNTcsImV4cCI6MTY1MjE4NTk1N30.S_WtzuhkSiQStnbPWBCuFzTNsaTENxtBrgsseU0Erio";
+    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbWFyYSIsInJvbGUiOiJST0xFX1NUVURFTlQiLCJpYXQiOjE2NTIxODIzNzYsImV4cCI6MTY1MjE4NTk3Nn0.WBOuXDRworqzQXTk3sw_vL0H7P-hfacKKWAYsRLKii4";
     private static final String INVALID_TOKEN = "Bearer " + "not an actual token";
+
 
     @BeforeEach
     void setUp() {
@@ -69,8 +70,8 @@ class UserControllerTest {
     @DisplayName("getAllUsers")
     void getAllUsers_RoleAdmin() throws Exception {
 
-        AppUser user1 = new AppUser(1L, UserRole.ROLE_STUDENT, "username1", "password1", "name1", "email1@gmail.com");
-        AppUser user2 = new AppUser(2L, UserRole.ROLE_TEACHER, "username2", "password2", "name2", "email2@gmail.com");
+        UserDTO user1 = new UserDTO(1L, UserRole.ROLE_STUDENT, "username1", "password1", "name1", "email1@gmail.com");
+        UserDTO user2 = new UserDTO(2L, UserRole.ROLE_TEACHER, "username2", "password2", "name2", "email2@gmail.com");
         given(userService.findAll()).willReturn(Arrays.asList(user1, user2));
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/users")
@@ -87,7 +88,7 @@ class UserControllerTest {
     @DisplayName("getUserAccount")
     void getUserAccount() throws Exception {
         Long userId = 1L;
-        AppUser user = new AppUser(userId, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
+        UserDTO user = new UserDTO(userId, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
         given(userService.findById(userId)).willReturn(user);
         ResultActions resultActions = mockMvc.perform(
                                             get("/learn/users/{userId}", userId)
@@ -98,19 +99,18 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"));
     }
 
-    // @PathVariable Long userId, @RequestBody UserDTO changedUserDTO
     @Test
     @DisplayName("updateUser")
     void updateUser() throws Exception {
         Long userId = 1L;
-        AppUser user = new AppUser(userId, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
-        UserDTO userDTO = new UserDTO(userId, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
-        given(userService.updateById(userId, userDTO)).willReturn(user);
+        UserDTO user = new UserDTO(null, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
+        UserDTO user2 = new UserDTO(userId, UserRole.ROLE_TEACHER, "username", "password", "name", "email@gmail.com");
+        given(userService.updateById(userId, user)).willReturn(user2);
         ResultActions resultActions = mockMvc.perform(
                                                 put("/learn/users/{userId}", userId)
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(userDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(user)));
         resultActions.andDo(print());
         resultActions.andExpect(status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId))
@@ -131,5 +131,4 @@ class UserControllerTest {
 
     }
 
-     */
 }

@@ -31,6 +31,15 @@ public class UserDTO {
 
     List<ArticleDTO> articles;
 
+    public UserDTO(Long userId, UserRole userRole, String username, String password, String name, String email) {
+        this.userId = userId;
+        this.userRole = userRole;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

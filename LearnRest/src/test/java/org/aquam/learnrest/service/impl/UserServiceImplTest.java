@@ -29,7 +29,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    /*
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -145,16 +144,11 @@ class UserServiceImplTest {
 
     @Test
     @DisplayName("deleteById")
-    void deleteByIdShouldThrow() {
+    void deleteByIdShouldThrowEntityNotFoundException() {
         Long userId = 1L;
         given(userRepository.findById(userId)).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class,
                 () -> userService.deleteById(userId));
     }
 
-    @Test
-    void toUser() {
-    }
-
-     */
 }

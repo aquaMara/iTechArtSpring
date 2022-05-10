@@ -19,6 +19,11 @@ public class SubjectDTO {
     private String filePath;
     List<SectionDTO> sections;
 
+    public SubjectDTO(Long subjectId, String subjectName) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

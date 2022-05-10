@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = WebSecurityConfig.class)
 @AutoConfigureMockMvc
 class AuthenticationControllerTest {
-    /*
 
     @Autowired
     private MockMvc mockMvc;
@@ -83,6 +82,5 @@ class AuthenticationControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid username or password"));
 
     }
-
-     */
+    
 }

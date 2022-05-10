@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = WebSecurityConfig.class)
 @AutoConfigureMockMvc
 class SectionControllerTest {
-    /*
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,16 +51,16 @@ class SectionControllerTest {
     @InjectMocks
     private SectionController sectionController;
 
-    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NDkwODMzMzksImV4cCI6MTY0OTQ0MzMzOX0.DkfdKSypk2E9DI5m8eHiLfIKmiXC7SoGQ-OEkNd_uxo";
-    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Iiwicm9sZSI6IlJPTEVfVEVBQ0hFUiIsImlhdCI6MTY0OTA4MzM2MywiZXhwIjoxNjQ5NDQzMzYzfQ.-Z4C1w2KP8Mqdaj3mivaFKOORKmJPGEOysR4Ky7ywj4";
-    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxIiwicm9sZSI6IlJPTEVfU1RVREVOVCIsImlhdCI6MTY0OTA4MzQwOCwiZXhwIjoxNjQ5NDQzNDA4fQ.X3LDgHF5Z6g_S-MJTvWJ3AkL7djCVfEFAv_nfBp4cwI";
+    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjY2Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NTIxODI2MTksImV4cCI6MTY1MjE4NjIxOX0.QOmmKdFjg_HzWOWzIqGgsD-NO0n-uarEioPJm-WDQoU";
+    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbSIsInJvbGUiOiJST0xFX1RFQUNIRVIiLCJpYXQiOjE2NTIxODIzNTcsImV4cCI6MTY1MjE4NTk1N30.S_WtzuhkSiQStnbPWBCuFzTNsaTENxtBrgsseU0Erio";
+    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbWFyYSIsInJvbGUiOiJST0xFX1NUVURFTlQiLCJpYXQiOjE2NTIxODIzNzYsImV4cCI6MTY1MjE4NTk3Nn0.WBOuXDRworqzQXTk3sw_vL0H7P-hfacKKWAYsRLKii4";
     private static final String INVALID_TOKEN = "Bearer " + "not an actual token";
 
     @Test
     @DisplayName("getAllSections")
     void getAllSections_RoleAdmin() throws Exception {
-        Section section1 = new Section(1L, "sectionName1");
-        Section section2 = new Section(2L, "sectionName2");
+        SectionDTO section1 = new SectionDTO(1L, "sectionName1", 1L);
+        SectionDTO section2 = new SectionDTO(2L, "sectionName2", 1L);
         given(sectionService.findAll()).willReturn(Arrays.asList(section1, section2));
         ResultActions resultActions = mockMvc.perform(
                                             get("/learn/sections")
@@ -76,8 +76,8 @@ class SectionControllerTest {
     @Test
     @DisplayName("getAllSections")
     void getAllSections_RoleTeacher() throws Exception {
-        Section section1 = new Section(1L, "sectionName1");
-        Section section2 = new Section(2L, "sectionName2");
+        SectionDTO section1 = new SectionDTO(1L, "sectionName1", 1L);
+        SectionDTO section2 = new SectionDTO(2L, "sectionName2", 1L);
         given(sectionService.findAll()).willReturn(Arrays.asList(section1, section2));
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/sections")
@@ -93,8 +93,8 @@ class SectionControllerTest {
     @Test
     @DisplayName("getAllSections")
     void getAllSections_RoleStudent() throws Exception {
-        Section section1 = new Section(1L, "sectionName1");
-        Section section2 = new Section(2L, "sectionName2");
+        SectionDTO section1 = new SectionDTO(1L, "sectionName1", 1L);
+        SectionDTO section2 = new SectionDTO(2L, "sectionName2", 1L);
         given(sectionService.findAll()).willReturn(Arrays.asList(section1, section2));
         ResultActions resultActions = mockMvc.perform(
                                         get("/learn/sections")
@@ -110,8 +110,8 @@ class SectionControllerTest {
     @Test
     @DisplayName("getAllSections")
     void getAllSections_InvalidToken() throws Exception {
-        Section section1 = new Section(1L, "sectionName1");
-        Section section2 = new Section(2L, "sectionName2");
+        SectionDTO section1 = new SectionDTO(1L, "sectionName1", 1L);
+        SectionDTO section2 = new SectionDTO(2L, "sectionName2", 1L);
         given(sectionService.findAll()).willReturn(Arrays.asList(section1, section2));
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/sections")
@@ -123,8 +123,6 @@ class SectionControllerTest {
     @Test
     @DisplayName("getAllSections")
     void getAllSectionsThrowsEntitiesNotFoundException() throws Exception {
-        Section section1 = new Section(1L, "sectionName1");
-        Section section2 = new Section(2L, "sectionName2");
         given(sectionService.findAll()).willThrow(EntitiesNotFoundException.class);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/sections")
@@ -137,7 +135,7 @@ class SectionControllerTest {
     @DisplayName("getSectionById")
     void getSectionById_RoleAdmin() throws Exception {
         Long sectionId = 1L;
-        Section section = new Section(sectionId, "sectionName");
+        SectionDTO section = new SectionDTO(sectionId, "sectionName", 1L);
         given(sectionService.findById(sectionId)).willReturn(section);
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/sections/{sectionId}", sectionId)
@@ -153,7 +151,7 @@ class SectionControllerTest {
     @DisplayName("getSectionById")
     void getSectionById_RoleTeacher() throws Exception {
         Long sectionId = 1L;
-        Section section = new Section(sectionId, "sectionName");
+        SectionDTO section = new SectionDTO(sectionId, "sectionName", 1L);
         given(sectionService.findById(sectionId)).willReturn(section);
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/sections/{sectionId}", sectionId)
@@ -168,7 +166,7 @@ class SectionControllerTest {
     @DisplayName("getSectionById")
     void getSectionById_RoleStudent() throws Exception {
         Long sectionId = 1L;
-        Section section = new Section(sectionId, "sectionName");
+        SectionDTO section = new SectionDTO(sectionId, "sectionName", 1L);
         given(sectionService.findById(sectionId)).willReturn(section);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/sections/{sectionId}", sectionId)
@@ -194,14 +192,14 @@ class SectionControllerTest {
     @Test
     @DisplayName("createSection")
     void createSection_RoleAdmin() throws Exception {
-        SectionDTO sectionDTO = new SectionDTO(null, "sectionName", 1L);
-        Section section = new Section(1L, "sectionName");
-        given(sectionService.create(sectionDTO)).willReturn(section);
+        SectionDTO section = new SectionDTO(null, "sectionName", 1L);
+        SectionDTO section2 = new SectionDTO(2L, "sectionName", 1L);
+        given(sectionService.create(section)).willReturn(section2);
         ResultActions resultActions = mockMvc.perform(
                                                 post("/learn/sections")
                                                 .header("Authorization", ADMIN_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(sectionDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(section)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isCreated())
                      .andExpect(MockMvcResultMatchers.jsonPath("$.sectionName").value("sectionName"));
@@ -211,14 +209,12 @@ class SectionControllerTest {
     @Test
     @DisplayName("createSection")
     void createSection_RoleTeacher() throws Exception {
-        SectionDTO sectionDTO = new SectionDTO(null, "sectionName", 1L);
-        Section section = new Section(1L, "sectionName");
-        given(sectionService.create(sectionDTO)).willReturn(section);
+        SectionDTO section = new SectionDTO(null, "sectionName", 1L);
         ResultActions resultActions = mockMvc.perform(
                                                 post("/learn/sections")
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(sectionDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(section)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
 
@@ -227,14 +223,13 @@ class SectionControllerTest {
     @Test
     @DisplayName("createSection")
     void createSectionThrowsConstraintViolationException() throws Exception {
-        SectionDTO sectionDTO = new SectionDTO(null, "", 1L);
-        Section section = new Section(1L, "sectionName");
-        given(sectionService.create(sectionDTO)).willThrow(ConstraintViolationException.class);
+        SectionDTO section = new SectionDTO(null, "", 1L);
+        given(sectionService.create(section)).willThrow(ConstraintViolationException.class);
         ResultActions resultActions = mockMvc.perform(
                                             post("/learn/sections")
                                             .header("Authorization", ADMIN_TOKEN)
                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                            .content(new ObjectMapper().writeValueAsString(sectionDTO)));
+                                            .content(new ObjectMapper().writeValueAsString(section)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isBadRequest());
 
@@ -244,14 +239,14 @@ class SectionControllerTest {
     @DisplayName("updateSection")
     void updateSection_RoleAdmin() throws Exception {
         Long sectionId = 1L;
-        SectionDTO newSectionDTO = new SectionDTO(sectionId, "sectionName", 1L);
-        Section newSection = new Section(sectionId, "sectionName");
-        given(sectionService.updateById(sectionId, newSectionDTO)).willReturn(newSection);
+        SectionDTO section = new SectionDTO(null, "sectionName", 1L);
+        SectionDTO section2 = new SectionDTO(sectionId, "sectionName", 1L);
+        given(sectionService.updateById(sectionId, section)).willReturn(section2);
         ResultActions resultActions = mockMvc.perform(
                                                     put("/learn/sections/{sectionId}", sectionId)
                                                     .header("Authorization", ADMIN_TOKEN)
                                                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                    .content(new ObjectMapper().writeValueAsString(newSectionDTO)));
+                                                    .content(new ObjectMapper().writeValueAsString(section)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
                      .andExpect(MockMvcResultMatchers.jsonPath("$.sectionId").value(sectionId))
@@ -262,14 +257,12 @@ class SectionControllerTest {
     @DisplayName("updateSection")
     void updateSection_RoleTeacher() throws Exception {
         Long sectionId = 1L;
-        SectionDTO newSectionDTO = new SectionDTO(sectionId, "sectionName", 1L);
-        Section newSection = new Section(sectionId, "sectionName");
-        given(sectionService.updateById(sectionId, newSectionDTO)).willReturn(newSection);
+        SectionDTO section = new SectionDTO(null, "sectionName", 1L);
         ResultActions resultActions = mockMvc.perform(
                                                     put("/learn/sections/{sectionId}", sectionId)
                                                     .header("Authorization", TEACHER_TOKEN)
                                                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                    .content(new ObjectMapper().writeValueAsString(newSectionDTO)));
+                                                    .content(new ObjectMapper().writeValueAsString(section)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
     }
@@ -278,8 +271,7 @@ class SectionControllerTest {
     @DisplayName("deleteSectionById")
     void deleteSectionById_RoleAdmin() throws Exception {
         Long sectionId = 1L;
-        SectionDTO newSectionDTO = new SectionDTO(sectionId, "sectionName", 1L);
-        Section section = new Section(sectionId, "sectionName");
+        SectionDTO section = new SectionDTO(sectionId, "sectionName", 1L);
         given(sectionService.deleteById(sectionId)).willReturn(true);
         ResultActions resultActions = mockMvc.perform(
                                             delete("/learn/sections/{sectionId}", sectionId)
@@ -294,8 +286,6 @@ class SectionControllerTest {
     @DisplayName("deleteSectionById")
     void deleteSectionById_RoleTeacher() throws Exception {
         Long sectionId = 1L;
-        SectionDTO newSectionDTO = new SectionDTO(sectionId, "sectionName", 1L);
-        Section section = new Section(sectionId, "sectionName");
         given(sectionService.deleteById(sectionId)).willReturn(true);
         ResultActions resultActions = mockMvc.perform(
                                                     delete("/learn/sections/{sectionId}", sectionId)
@@ -316,7 +306,6 @@ class SectionControllerTest {
         resultActions.andExpect(status().isNotFound());
     }
 
-     */
 }
 
 /*
