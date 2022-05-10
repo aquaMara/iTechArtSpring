@@ -41,8 +41,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceImplTest {
 
-    /*
-
     @Mock
     private SubjectRepository subjectRepository;
     @Mock
@@ -67,6 +65,7 @@ class SubjectServiceImplTest {
         then(subjectRepository).should().findById(subjectId);
     }
 
+
     @Test
     @DisplayName("findById")
     void findByIdShouldThrowEntityNotFoundException() {
@@ -74,6 +73,7 @@ class SubjectServiceImplTest {
         assertThrows(EntityNotFoundException.class,
                 () -> subjectService.findById(anyLong()));
     }
+
 
     @Test
     @DisplayName("findByName")
@@ -86,6 +86,7 @@ class SubjectServiceImplTest {
         then(subjectRepository).should().findBySubjectName(subjectName);
     }
 
+
     @Test
     @DisplayName("findByName")
     void findByNameShouldThrowEntityNotFoundException() {
@@ -93,6 +94,7 @@ class SubjectServiceImplTest {
         assertThrows(EntityNotFoundException.class,
                 () -> subjectService.findByName(anyString()));
     }
+
 
     @Test
     @DisplayName("findAll")
@@ -102,6 +104,8 @@ class SubjectServiceImplTest {
         subjectService.findAll();
         then(subjectRepository).should(times(2)).findAll();
     }
+
+
     @Test
     @DisplayName("findAll")
     void findAllShouldThrowEntitiesNotFoundException() {
@@ -110,6 +114,7 @@ class SubjectServiceImplTest {
                 () -> subjectService.findAll());
     }
 
+
     // need to check
     // кажется, что слишком много махинаций с given - willReturn, так и должно быть?
     @Test
@@ -117,13 +122,12 @@ class SubjectServiceImplTest {
     void createShouldReturnSubject() throws IOException {
         String newSubjectName = "subject_name";
         Subject subject = new Subject(null, newSubjectName, "filepath.jpg");
-        SubjectDTO subjectDTO = new SubjectDTO(null, newSubjectName, "filepath.jpg");
+        SubjectDTO subjectDTO = new SubjectDTO(null, newSubjectName);
         given(modelMapper.map(subjectDTO, Subject.class)).willReturn(subject);
-        // ***********************************************************************************
-        given(imageUploader.uploadImage(any(MultipartFile.class), anyString())).willReturn(anyString());
-        subjectService.create(subjectDTO, multipartFile);
+        subjectService.create(subjectDTO);
         then(subjectRepository).should().save(subject);
     }
+
 
     @Test
     @DisplayName("create")
@@ -132,47 +136,42 @@ class SubjectServiceImplTest {
         given(subjectRepository.findBySubjectName(subjectName))
                 .willReturn(Optional.of(new Subject(1L, subjectName, "filepath.jpg")));
         assertThrows(EntityExistsException.class,
-                () -> subjectService.create(new SubjectDTO(null, subjectName, "filepath.jpg"), mock(MultipartFile.class)));
+                () -> subjectService.create(new SubjectDTO(null, subjectName)));
     }
+
 
     @Test
     @DisplayName("create")
     void createShouldThrowConstraintViolationException() throws IOException {
-        SubjectDTO subjectDTO = new SubjectDTO(null, null, "filepath.jpg");
+        SubjectDTO subjectDTO = new SubjectDTO(null, null);
         assertThrows(ConstraintViolationException.class,
                 () -> subjectService.toSubject(subjectDTO));
     }
 
+    /*
+    // -
     @Test
     @DisplayName("updateById")
-    void updateByIdShouldReturnSubject() throws IOException {
+    void updateByIdShouldThrowEntityExistsException() throws IOException {
         Long subjectId = 1L;
         String subjectName = "subject_name";
-        SubjectDTO newSubjectDTO = new SubjectDTO(null, "subjectDTO_name", "filepath.jpg");
-        Subject newSubject = new Subject(null, "subjectDTO_name", "filepath.jpg");
-        given(modelMapper.map(newSubjectDTO, Subject.class)).willReturn(newSubject);
-        subjectService.updateById(subjectId, newSubjectDTO, multipartFile);
-        then(subjectRepository).should().save(newSubject);
+        Subject newSubject = new Subject(subjectId, "subject_name", "filepath.jpg");
+        SubjectDTO newSubjectDTO = new SubjectDTO(null, "subject_name");
+        given(subjectRepository.findById(subjectId)).willReturn(Optional.of(new Subject(1L, "sn", "filepath.jpg")));
+        given(subjectRepository.findBySubjectName(newSubjectDTO.getSubjectName())).willReturn(Optional.of(newSubject));
+        assertThrows(EntityExistsException.class,
+                () -> subjectService.updateById(subjectId, newSubjectDTO));
     }
+     */
 
     @Test
     @DisplayName("updateById")
-    void updateByIdShouldThrowConstraintViolationException() throws IOException {
-        Long subjectId = 1L;
-        Subject newSubject = new Subject(subjectId, null, "filepath.jpg");
-        SubjectDTO newSubjectDTO = new SubjectDTO(null, null, "filepath.jpg");
-        assertThrows(ConstraintViolationException.class,
-                () -> subjectService.updateById(subjectId, newSubjectDTO, multipartFile));
-    }
-
-    @Test
-    @DisplayName("updateById")
-    void updateByIdWithoutMultipart() {
+    void updateByIdShouldReturnSubject() {
         Long subjectId = 1L;
         Subject subject = new Subject(subjectId, "subject_name", "filepath.jpg");
         given(subjectRepository.findById(subjectId)).willReturn(Optional.of(subject));
         Subject newSubject = new Subject(subjectId, "subject_name2", "filepath.jpg");
-        SubjectDTO newSubjectDTO = new SubjectDTO(subjectId, "subject_name2", "filepath.jpg");
+        SubjectDTO newSubjectDTO = new SubjectDTO(subjectId, "subject_name2");
         given(modelMapper.map(newSubjectDTO, Subject.class)).willReturn(newSubject);
         subjectService.updateById(subjectId, newSubjectDTO);
         then(subjectRepository).should().save(newSubject);
@@ -188,25 +187,12 @@ class SubjectServiceImplTest {
         then(subjectRepository).should().delete(subject);
     }
 
-    // need to check
-    // нужно ли делать такие тесты, если это исключение уже проверялось в тесте findByIdShouldReturnSubject,
-    // который проверяет метод findById на выброс исключения?
     @Test
-    void deleteByIdShouldThrowException() {
+    void deleteByIdShouldThrowEntityNotFoundException() {
         Long subjectId = 1L;
         given(subjectRepository.findById(subjectId)).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class,
                 () -> subjectService.deleteById(subjectId));
 
     }
-
-    @Test
-    @Disabled
-    void toSubject() {
-        SubjectDTO subjectDTO = new SubjectDTO(null, null, null);
-        // Subject subject = new Subject(null, "subjectDTO_name", "filepath.jpg");
-
-    }
-
-     */
 }

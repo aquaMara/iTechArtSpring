@@ -28,11 +28,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-// на права
 @ExtendWith(MockitoExtension.class)
 class SectionServiceImplTest {
 
-    /*
+
     @Mock
     private SectionRepository sectionRepository;
     @Mock
@@ -121,13 +120,4 @@ class SectionServiceImplTest {
         sectionService.deleteById(sectionId);
         then(sectionRepository).should().delete(section);
     }
-
-    @Disabled
-    @Test
-    @DisplayName("toSection")
-    void toSection() {
-
-    }
-
-     */
 }

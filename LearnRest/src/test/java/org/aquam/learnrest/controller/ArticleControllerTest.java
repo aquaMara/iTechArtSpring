@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = WebSecurityConfig.class)
 @AutoConfigureMockMvc
 class ArticleControllerTest {
-    /*
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,33 +49,16 @@ class ArticleControllerTest {
     @InjectMocks
     private ArticleController articleController;
 
-    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NDkwODMzMzksImV4cCI6MTY0OTQ0MzMzOX0.DkfdKSypk2E9DI5m8eHiLfIKmiXC7SoGQ-OEkNd_uxo";
-    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Iiwicm9sZSI6IlJPTEVfVEVBQ0hFUiIsImlhdCI6MTY0OTA4MzM2MywiZXhwIjoxNjQ5NDQzMzYzfQ.-Z4C1w2KP8Mqdaj3mivaFKOORKmJPGEOysR4Ky7ywj4";
-    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxIiwicm9sZSI6IlJPTEVfU1RVREVOVCIsImlhdCI6MTY0OTA4MzQwOCwiZXhwIjoxNjQ5NDQzNDA4fQ.X3LDgHF5Z6g_S-MJTvWJ3AkL7djCVfEFAv_nfBp4cwI";
+    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjY2Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NTIxNzgzMTcsImV4cCI6MTY1MjE4MTkxN30.YnUMLqvwKW7kpXXtL9ibPK5AGUcHDAbcT9fbFEJK4b4";
+    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbSIsInJvbGUiOiJST0xFX1RFQUNIRVIiLCJpYXQiOjE2NTIxNzgyOTMsImV4cCI6MTY1MjE4MTg5M30.1L6fVKHkm4pUk6VMxAyS62NQ8RRewe5smI_N0dUrEH0";
+    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbWFyYSIsInJvbGUiOiJST0xFX1NUVURFTlQiLCJpYXQiOjE2NTIxNzgwMDAsImV4cCI6MTY1MjE4MTYwMH0.kGRvAiyoUhjPQuZiFcO7eYQAwJqcpHPrlu9PEZup_3Y";
     private static final String INVALID_TOKEN = "Bearer " + "not an actual token";
 
     @Test
     @DisplayName("getAllArticles")
-    void getAllArticles_RoleAdmin() throws Exception {
-        Article article1 = new Article(1L, "heading1", "content1", "link1", "literature1", "filepath1.jpg");
-        Article article2 = new Article(2L, "heading2", "content2", "link2", "literature2", "filepath2.jpg");
-        given(articleService.findAll()).willReturn(Arrays.asList(article1, article2));
-        ResultActions resultActions = mockMvc.perform(
-                                                    get("/learn/articles")
-                                                    .header("Authorization", ADMIN_TOKEN));
-        resultActions.andDo(print());
-        resultActions.andExpect(status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].articleId").value("1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].heading").value("heading1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].articleId").value("2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].literature").value("literature2"));
-    }
-
-    @Test
-    @DisplayName("getAllArticles")
     void getAllArticles_Invalid() throws Exception {
-        Article article1 = new Article(1L, "heading1", "content1", "link1", "literature1", "filepath1.jpg");
-        Article article2 = new Article(2L, "heading2", "content2", "link2", "literature2", "filepath2.jpg");
+        ArticleDTO article1 = new ArticleDTO(1L, "heading1", "content1", "link1", "literature1", 0.0, 0, 0.0, 1L, 1L);
+        ArticleDTO article2 = new ArticleDTO(2L, "heading2", "content2", "link2", "literature2", 0.0, 0, 0.0, 1L, 1L);
         given(articleService.findAll()).willReturn(Arrays.asList(article1, article2));
         ResultActions resultActions = mockMvc.perform(
                 get("/learn/articles")
@@ -87,8 +70,8 @@ class ArticleControllerTest {
     @Test
     @DisplayName("getAllArticles")
     void getAllArticles_RoleTeacher() throws Exception {
-        Article article1 = new Article(1L, "heading1", "content1", "link1", "literature1", "filepath1.jpg");
-        Article article2 = new Article(2L, "heading2", "content2", "link2", "literature2", "filepath2.jpg");
+        ArticleDTO article1 = new ArticleDTO(1L, "heading1", "content1", "link1", "literature1", 0.0, 0, 0.0, 1L, 1L);
+        ArticleDTO article2 = new ArticleDTO(2L, "heading2", "content2", "link2", "literature2", 0.0, 0, 0.0, 1L, 1L);
         given(articleService.findAll()).willReturn(Arrays.asList(article1, article2));
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/articles")
@@ -104,8 +87,8 @@ class ArticleControllerTest {
     @Test
     @DisplayName("getAllArticles")
     void getAllArticles_RoleStudent() throws Exception {
-        Article article1 = new Article(1L, "heading1", "content1", "link1", "literature1", "filepath1.jpg");
-        Article article2 = new Article(2L, "heading2", "content2", "link2", "literature2", "filepath2.jpg");
+        ArticleDTO article1 = new ArticleDTO(1L, "heading1", "content1", "link1", "literature1", 0.0, 0, 0.0, 1L, 1L);
+        ArticleDTO article2 = new ArticleDTO(2L, "heading2", "content2", "link2", "literature2", 0.0, 0, 0.0, 1L, 1L);
         given(articleService.findAll()).willReturn(Arrays.asList(article1, article2));
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/articles")
@@ -132,28 +115,9 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("getArticleById")
-    void getArticleById_RoleAdmin() throws Exception {
-        Long articleId = 1L;
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.findById(articleId)).willReturn(article);
-        ResultActions resultActions = mockMvc.perform(
-                                                    get("/learn/articles/{articleId}", articleId)
-                                                    .header("Authorization", ADMIN_TOKEN));
-        resultActions.andDo(print());
-        resultActions.andExpect(status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.articleId").value(articleId))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.link").value("link"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("filepath.jpg"));
-    }
-
-    @Test
-    @DisplayName("getArticleById")
     void getArticleById_RoleTeacher() throws Exception {
         Long articleId = 1L;
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filepath.jpg");
+        ArticleDTO article = new ArticleDTO(articleId, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
         given(articleService.findById(articleId)).willReturn(article);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/articles/{articleId}", articleId)
@@ -164,15 +128,14 @@ class ArticleControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.link").value("link"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("filepath.jpg"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"));
     }
 
     @Test
     @DisplayName("getArticleById")
     void getArticleById_RoleStudent() throws Exception {
         Long articleId = 1L;
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filepath.jpg");
+        ArticleDTO article = new ArticleDTO(articleId, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
         given(articleService.findById(articleId)).willReturn(article);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/articles/{articleId}", articleId)
@@ -183,8 +146,7 @@ class ArticleControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.link").value("link"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("filepath.jpg"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"));
     }
 
     @Test
@@ -202,68 +164,32 @@ class ArticleControllerTest {
     @Test
     @DisplayName("createArticle")
     void createArticle_RoleTeacher() throws Exception {
-        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
-        Article article = new Article(1L, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.create(articleDTO)).willReturn(article);
+        ArticleDTO article = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
+        ArticleDTO article2 = new ArticleDTO(1L, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
+        given(articleService.create(article)).willReturn(article2);
         ResultActions resultActions = mockMvc.perform(
                                                 post("/learn/articles")
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(articleDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(article)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.articleId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.link").value("link"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("filepath.jpg"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"));
     }
 
     @Test
     @DisplayName("createArticle")
     void createArticle_RoleStudent() throws Exception {
-        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
-        Article article = new Article(1L, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.create(articleDTO)).willReturn(article);
+        ArticleDTO article = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
         ResultActions resultActions = mockMvc.perform(
                                                     post("/learn/articles")
                                                     .header("Authorization", STUDENT_TOKEN)
                                                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                    .content(new ObjectMapper().writeValueAsString(articleDTO)));
-        resultActions.andDo(print());
-        resultActions.andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DisplayName("addFile")
-    void addFile_RoleTeacher() throws Exception {
-        Long articleId = 1L;
-        MockMultipartFile firstFile = new MockMultipartFile("data", "filename.jpg", "image/jpeg", "some xml".getBytes());
-        Article article = new Article(1L, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.addFile(articleId, firstFile)).willReturn(article);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                                    .multipart("/learn/articles/upload/{articleId}", articleId)
-                                    .file(firstFile)
-                                    .header("Authorization", TEACHER_TOKEN));
-        resultActions.andDo(print());
-        resultActions.andExpect(status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.articleId").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"));
-    }
-
-    @Test
-    @DisplayName("addFile")
-    void addFile_RoleAdmin() throws Exception {
-        Long articleId = 1L;
-        MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-        Article article = new Article(1L, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.addFile(articleId, firstFile)).willReturn(article);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                                                .multipart("/learn/articles/upload/{articleId}", articleId)
-                                                .file(firstFile)
-                                                .header("Authorization", ADMIN_TOKEN));
+                                                    .content(new ObjectMapper().writeValueAsString(article)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
     }
@@ -272,51 +198,48 @@ class ArticleControllerTest {
     @DisplayName("updateArticle")
     void updateArticle_RoleTeacher() throws Exception {
         Long articleId = 1L;
-        ArticleDTO articleDTO = new ArticleDTO(articleId, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.updateById(articleId, articleDTO)).willReturn(article);
+        ArticleDTO article = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
+        ArticleDTO article2 = new ArticleDTO(1L, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
+        given(articleService.updateById(articleId, article)).willReturn(article2);
         ResultActions resultActions = mockMvc.perform(
                                                 put("/learn/articles/{articleId}", articleId)
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(articleDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(article)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.articleId").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.heading").value("heading"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("content"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.link").value("link"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("filepath.jpg"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.literature").value("literature"));
     }
 
     @Test
     @DisplayName("updateArticle")
     void updateArticle_RoleStudent() throws Exception {
         Long articleId = 1L;
-        ArticleDTO articleDTO = new ArticleDTO(articleId, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filepath.jpg");
-        given(articleService.updateById(articleId, articleDTO)).willReturn(article);
+        ArticleDTO article = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
         ResultActions resultActions = mockMvc.perform(
                                                     put("/learn/articles/{articleId}", articleId)
                                                     .header("Authorization", STUDENT_TOKEN)
                                                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                    .content(new ObjectMapper().writeValueAsString(articleDTO)));
+                                                    .content(new ObjectMapper().writeValueAsString(article)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
     }
 
     @Test
     @DisplayName("updateArticle")
-    void updateArticleThrows() throws Exception {
+    void updateArticleThrowsConstraintViolationException() throws Exception {
         Long articleId = 1L;
-        ArticleDTO articleDTO = new ArticleDTO(articleId, "", "content", "link", "literature", "filepath.jpg", 1L, 1L);
-        given(articleService.updateById(articleId, articleDTO)).willThrow(ConstraintViolationException.class);
+        ArticleDTO article = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
+        given(articleService.updateById(articleId, article)).willThrow(ConstraintViolationException.class);
         ResultActions resultActions = mockMvc.perform(
                                                 put("/learn/articles/{articleId}", articleId)
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(articleDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(article)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isBadRequest());
     }
@@ -359,5 +282,4 @@ class ArticleControllerTest {
         resultActions.andExpect(status().isNotFound());
     }
 
-     */
 }

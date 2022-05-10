@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SubjectControllerTest {
 
-    /*
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -62,51 +62,51 @@ class SubjectControllerTest {
     @InjectMocks
     private SubjectController subjectController;
 
-    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NDkwODMzMzksImV4cCI6MTY0OTQ0MzMzOX0.DkfdKSypk2E9DI5m8eHiLfIKmiXC7SoGQ-OEkNd_uxo";
-    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Iiwicm9sZSI6IlJPTEVfVEVBQ0hFUiIsImlhdCI6MTY0OTA4MzM2MywiZXhwIjoxNjQ5NDQzMzYzfQ.-Z4C1w2KP8Mqdaj3mivaFKOORKmJPGEOysR4Ky7ywj4";
-    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJxIiwicm9sZSI6IlJPTEVfU1RVREVOVCIsImlhdCI6MTY0OTA4MzQwOCwiZXhwIjoxNjQ5NDQzNDA4fQ.X3LDgHF5Z6g_S-MJTvWJ3AkL7djCVfEFAv_nfBp4cwI";
+    private static final String ADMIN_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjY2Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE2NTIxODI2MTksImV4cCI6MTY1MjE4NjIxOX0.QOmmKdFjg_HzWOWzIqGgsD-NO0n-uarEioPJm-WDQoU";
+    private static final String TEACHER_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbSIsInJvbGUiOiJST0xFX1RFQUNIRVIiLCJpYXQiOjE2NTIxODIzNTcsImV4cCI6MTY1MjE4NTk1N30.S_WtzuhkSiQStnbPWBCuFzTNsaTENxtBrgsseU0Erio";
+    private static final String STUDENT_TOKEN = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcXVhbWFyYSIsInJvbGUiOiJST0xFX1NUVURFTlQiLCJpYXQiOjE2NTIxODIzNzYsImV4cCI6MTY1MjE4NTk3Nn0.WBOuXDRworqzQXTk3sw_vL0H7P-hfacKKWAYsRLKii4";
     private static final String INVALID_TOKEN = "Bearer " + "not an actual token";
 
     @Test
     @DisplayName("getAllSubjects")
     void getAllSubjects_RoleAdmin() throws Exception {
-        Subject subject = new Subject(1L, "subject_nameNAME", "filepathPATH.jpg");
-        List<Subject> subjects = Arrays.asList(subject);
+        SubjectDTO subject = new SubjectDTO(1L, "subject_name");
+        List<SubjectDTO> subjects = Arrays.asList(subject);
         given(subjectService.findAll()).willReturn(subjects);
         ResultActions resultActions = mockMvc.perform(
                                                         get("/learn/subjects")
                                                         .header("Authorization", ADMIN_TOKEN));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
-                     .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_nameNAME"));
+                     .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_name"));
     }
 
     @Test
     @DisplayName("getAllSubjects")
     void getAllSubjects_RoleTeacher() throws Exception {
-        Subject subject = new Subject(1L, "subject_nameNAME", "filepathPATH.jpg");
-        List<Subject> subjects = Arrays.asList(subject);
+        SubjectDTO subject = new SubjectDTO(1L, "subject_name");
+        List<SubjectDTO> subjects = Arrays.asList(subject);
         given(subjectService.findAll()).willReturn(subjects);
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/subjects")
                                                 .header("Authorization", TEACHER_TOKEN));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_nameNAME"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_name"));
     }
 
     @Test
     @DisplayName("getAllSubjects")
     void getAllSubjects_RoleStudent() throws Exception {
-        Subject subject = new Subject(1L, "subject_nameNAME", "filepathPATH.jpg");
-        List<Subject> subjects = Arrays.asList(subject);
+        SubjectDTO subject = new SubjectDTO(1L, "subject_name");
+        List<SubjectDTO> subjects = Arrays.asList(subject);
         given(subjectService.findAll()).willReturn(subjects);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/subjects")
                                                     .header("Authorization", STUDENT_TOKEN));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_nameNAME"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].subjectName").value("subject_name"));
     }
 
     @Test
@@ -125,7 +125,7 @@ class SubjectControllerTest {
     @DisplayName("getSubjectById")
     void getSubjectById_RoleAdmin() throws Exception {
         Long subjectId = 1L;
-        Subject subject = new Subject(subjectId, "subject_name", "filepath.jpg");
+        SubjectDTO subject = new SubjectDTO(subjectId, "subject_name");
         given(subjectService.findById(subjectId)).willReturn(subject);
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/subjects/{subjectId}", subjectId)
@@ -139,7 +139,7 @@ class SubjectControllerTest {
     @DisplayName("getSubjectById")
     void getSubjectById_RoleTeacher() throws Exception {
         Long subjectId = 1L;
-        Subject subject = new Subject(subjectId, "subject_name", "filepath.jpg");
+        SubjectDTO subject = new SubjectDTO(subjectId, "subject_name");
         given(subjectService.findById(subjectId)).willReturn(subject);
         ResultActions resultActions = mockMvc.perform(
                                                     get("/learn/subjects/{subjectId}", subjectId)
@@ -153,7 +153,7 @@ class SubjectControllerTest {
     @DisplayName("getSubjectById")
     void getSubjectById_RoleStudent() throws Exception {
         Long subjectId = 1L;
-        Subject subject = new Subject(subjectId, "subject_name", "filepath.jpg");
+        SubjectDTO subject = new SubjectDTO(subjectId, "subject_name");
         given(subjectService.findById(subjectId)).willReturn(subject);
         ResultActions resultActions = mockMvc.perform(
                                                 get("/learn/subjects/{subjectId}", subjectId)
@@ -178,14 +178,14 @@ class SubjectControllerTest {
     @Test
     @DisplayName("createSubject")
     void createSubject_RoleAdmin() throws Exception {
-        SubjectDTO subjectDTO = new SubjectDTO(null, "subject_name", null);
-        Subject subject = new Subject(1L, "subject_name", null);
-        given(subjectService.create(subjectDTO)).willReturn(subject);
+        SubjectDTO subject = new SubjectDTO(null, "subject_name");
+        SubjectDTO subject2 = new SubjectDTO(1L, "subject_name");
+        given(subjectService.create(subject)).willReturn(subject2);
         ResultActions resultActions = mockMvc.perform(
                                                 post("/learn/subjects")
                                                 .header("Authorization", ADMIN_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(subjectDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(subject)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.subjectName").value("subject_name"));
@@ -195,14 +195,14 @@ class SubjectControllerTest {
     @Test
     @DisplayName("createSubject")
     void createSubject_RoleTeacher() throws Exception {
-        SubjectDTO subjectDTO = new SubjectDTO(null, "subject_name", null);
-        Subject subject = new Subject(1L, "subject_name", null);
-        given(subjectService.create(subjectDTO)).willReturn(subject);
+        SubjectDTO subject = new SubjectDTO(null, "subject_name");
+        SubjectDTO subject2 = new SubjectDTO(1L, "subject_name");
+        given(subjectService.create(subject)).willReturn(subject2);
         ResultActions resultActions = mockMvc.perform(
                                             post("/learn/subjects")
                                             .header("Authorization", TEACHER_TOKEN)
                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                            .content(new ObjectMapper().writeValueAsString(subjectDTO)));
+                                            .content(new ObjectMapper().writeValueAsString(subject)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
     }
@@ -210,14 +210,13 @@ class SubjectControllerTest {
     @Test
     @DisplayName("createSubject")
     void createSubjectThrowsEntityExistsException() throws Exception {
-        SubjectDTO subjectDTO = new SubjectDTO(null, "subject_name", null);
-        Subject subject = new Subject(1L, "subject_name", null);
-        given(subjectService.create(subjectDTO)).willThrow(EntityExistsException.class);
+        SubjectDTO subject = new SubjectDTO(null, "subject_name");
+        given(subjectService.create(subject)).willThrow(EntityExistsException.class);
         ResultActions resultActions = mockMvc.perform(
                                                 post("/learn/subjects")
                                                 .header("Authorization", ADMIN_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(subjectDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(subject)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isBadRequest());
     }
@@ -259,14 +258,14 @@ class SubjectControllerTest {
     @DisplayName("updateSubject")
     void updateSubject_RoleAdmin() throws Exception {
         Long subjectId = 1L;
-        Subject newSubject = new Subject(subjectId, "subject_name", "filepath.jpg");
-        SubjectDTO newSubjectDTO = new SubjectDTO(subjectId, "subject_name", "filepath.jpg");
-        given(subjectService.updateById(subjectId, newSubjectDTO)).willReturn(newSubject);
+        SubjectDTO subject = new SubjectDTO(null, "subject_name");
+        SubjectDTO subject2 = new SubjectDTO(subjectId, "subject_name");
+        given(subjectService.updateById(subjectId, subject)).willReturn(subject2);
         ResultActions resultActions = mockMvc.perform(
                                                 put("/learn/subjects/{subjectId}", subjectId)
                                                 .header("Authorization", ADMIN_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(newSubjectDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(subject)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.subjectId").value(subjectId))
@@ -278,14 +277,12 @@ class SubjectControllerTest {
     @DisplayName("updateSubject")
     void updateSubject_RoleTeacher() throws Exception {
         Long subjectId = 1L;
-        Subject newSubject = new Subject(subjectId, "subject_name", "filepath.jpg");
-        SubjectDTO newSubjectDTO = new SubjectDTO(subjectId, "subject_name", "filepath.jpg");
-        given(subjectService.updateById(subjectId, newSubjectDTO)).willReturn(newSubject);
+        SubjectDTO subject = new SubjectDTO(null, "subject_name");
         ResultActions resultActions = mockMvc.perform(
                                                 put("/learn/subjects/{subjectId}", subjectId)
                                                 .header("Authorization", TEACHER_TOKEN)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                .content(new ObjectMapper().writeValueAsString(newSubjectDTO)));
+                                                .content(new ObjectMapper().writeValueAsString(subject)));
         resultActions.andDo(print());
         resultActions.andExpect(status().isForbidden());
     }
@@ -327,8 +324,6 @@ class SubjectControllerTest {
         resultActions.andDo(print());
         resultActions.andExpect(status().isBadRequest());
     }
-
-     */
 
 }
 /*

@@ -20,6 +20,12 @@ public class SectionDTO {
     private Long subjectId;
     List<ArticleDTO> articles;
 
+    public SectionDTO(Long sectionId, String sectionName, Long subjectId) {
+        this.sectionId = sectionId;
+        this.sectionName = sectionName;
+        this.subjectId = subjectId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

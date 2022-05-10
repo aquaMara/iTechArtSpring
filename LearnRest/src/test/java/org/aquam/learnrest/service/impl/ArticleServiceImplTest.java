@@ -33,12 +33,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 
-
 @ExtendWith(MockitoExtension.class)
 //@SpringBootTest
 class ArticleServiceImplTest {
-
-    /*
 
     @Mock
     private ArticleRepository articleRepository;
@@ -61,7 +58,7 @@ class ArticleServiceImplTest {
     @DisplayName("findById")
     void findByIdShouldReturnArticle() {
         Long articleId = 1L;
-        Article article = new Article(articleId, "heading", "content", "link", "literature", "filePath.jpg");
+        Article article = new Article(articleId, "heading", "content", "link", "literature");
         given(articleRepository.findById(articleId))
                 .willReturn(Optional.of(article));
         articleService.findById(articleId);
@@ -80,7 +77,7 @@ class ArticleServiceImplTest {
     @Test
     @DisplayName("findAll")
     void findAllShouldReturnListOfArticles() {
-        Article article = new Article(1L, "heading", "content", "link", "literature", "filePath.jpg");
+        Article article = new Article(1L, "heading", "content", "link", "literature");
         given(articleRepository.findAll())
                 .willReturn(Arrays.asList(article));
         articleService.findAll();
@@ -101,8 +98,8 @@ class ArticleServiceImplTest {
     @Disabled
     @DisplayName("create")
     void createWithoutMultipartShouldReturnArticle() throws IOException {
-        Article article = new Article(null, "heading", "content", "link", "literature", "filePath.jpg");
-        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
+        Article article = new Article(null, "heading", "content", "link", "literature");
+        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", 00., 0, 0.0, 1L, 1L);
         given(myModelMapper.map(articleDTO, Article.class)).willReturn(article);
         articleService.create(articleDTO);
         then(articleRepository).should().save(article);
@@ -112,56 +109,44 @@ class ArticleServiceImplTest {
     @Disabled
     @DisplayName("create")
     void createShouldReturnArticle() throws IOException {
-        Article article = new Article(null, "heading", "content", "link", "literature", "filePath.jpg");
-        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", "filepath.jpg", 1L, 1L);
+        Article article = new Article(null, "heading", "content", "link", "literature");
+        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", "link", "literature", 0.0, 0, 0.0, 1L, 1L);
 
         given(myModelMapper.map(articleDTO, Article.class)).willReturn(article);
         //given(articleService.toArticle(articleDTO)).willReturn(article);
-        given(imageUploader.uploadImage(any(MultipartFile.class), anyString())).willReturn(anyString());
 
-        articleService.create(articleDTO, multipartFile);
+        articleService.create(articleDTO);
         then(articleRepository).should().save(article);
     }
 
     @Test
     @DisplayName("create")
     void createShouldThrowConstraintViolationException() {
-        ArticleDTO articleDTO = new ArticleDTO(null, null, null, "link", "literature","filepath.jpg", 1L, 1L);
+        ArticleDTO articleDTO = new ArticleDTO(null, null, null, "link", "literature", 0.0, 0, 0.0, 1L, 1L);
         assertThrows(ConstraintViolationException.class,
                 () -> articleService.toArticle(articleDTO));
     }
 
-    // ??? article is null
     @Disabled
     @Test
     @DisplayName("create")
     void createShouldNotThrowConstraintViolationException() throws IOException {
-        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", null, null,"filepath.jpg", 1L, 1L);
-        Article article = new Article(null, "heading", "content", null, null, "filePath.jpg");
-
+        ArticleDTO articleDTO = new ArticleDTO(null, "heading", "content", null, null, 0.0, 0, 0.0, 1L, 1L);
+        Article article = new Article(1L, "heading", "content", null, null);
+        // given(articleRepository.findById(1L)).willReturn(Optional.of(article));
         given(myModelMapper.map(articleDTO, Article.class)).willReturn(article);
-        given(imageUploader.uploadImage(any(MultipartFile.class), anyString())).willReturn(anyString());
-        articleService.create(articleDTO, multipartFile);
+        articleService.create(articleDTO);
         then(articleRepository).should().save(article);
     }
 
+    /*
     @Test
     void updateByIdShouldReturnArticle() throws IOException {
-        Article newArticle = new Article(1L, "content", "heading", "link", "literature", "filepath.jpg");
-        ArticleDTO newArticleDTO = new ArticleDTO(1L, "content", "heading", "link", "literature", "filepath.jpg", 2L, 3L);
-        given(myModelMapper.map(newArticleDTO, Article.class)).willReturn(newArticle);
-        // given(imageUploader.uploadImage(any(MultipartFile.class), anyString())).willReturn(anyString());
-        // given(imageUploader.uploadImage(multipartFile, uploadDirectory)).willReturn("anyString()");
-        articleService.updateById(1L, newArticleDTO, multipartFile);
-        then(articleRepository).should().save(newArticle);
-    }
-
-    @Test
-    void updateByIdWithoutMultipartShouldReturnArticle() throws IOException {
         Long articleId = 1L;
-        Article article = new Article(articleId, "content", "heading", "link", "literature", "filepath.jpg");
-        Article newArticle = new Article(1L, "content", "heading", "link", "literature", "filepath.jpg");
-        ArticleDTO newArticleDTO = new ArticleDTO(1L, "content", "heading", "link", "literature", "filepath.jpg", 2L, 3L);
+        Article article = new Article(articleId, "content", "heading", "link", "literature");
+
+        Article newArticle = new Article(1L, "content", "heading", "link", "literature");
+        ArticleDTO newArticleDTO = new ArticleDTO(1L, "content", "heading", "link", "literature", 0.0, 0, 0.0, 2L, 3L);
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
         given(myModelMapper.map(newArticleDTO, Article.class)).willReturn(newArticle);
         articleService.updateById(1L, newArticleDTO);
@@ -169,9 +154,22 @@ class ArticleServiceImplTest {
     }
 
     @Test
+    void updateByIdWithoutMultipartShouldReturnArticle() throws IOException {
+        Long articleId = 1L;
+        Article article = new Article(articleId, "content", "heading", "link", "literature");
+        Article newArticle = new Article(1L, "content", "heading", "link", "literature");
+        ArticleDTO newArticleDTO = new ArticleDTO(1L, "content", "heading", "link", "literature", 0.0, 0, 0.0, 2L, 3L);
+        given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
+        given(myModelMapper.map(newArticleDTO, Article.class)).willReturn(newArticle);
+        articleService.updateById(1L, newArticleDTO);
+        then(articleRepository).should().save(newArticle);
+    }
+     */
+
+    @Test
     void deleteById() {
         Long articleId = 1L;
-        Article article = new Article(articleId, "content", "heading", "link", "literature", "filepath.jpg");
+        Article article = new Article(articleId, "content", "heading", "link", "literature");
         given(articleRepository.findById(1L))
                 .willReturn(Optional.of(article))
                 .willReturn(Optional.of(article));
@@ -179,11 +177,5 @@ class ArticleServiceImplTest {
         then(articleRepository).should().delete(article);
 
     }
-
-    @Test
-    void toArticle() {
-    }
-
-     */
 
 }
